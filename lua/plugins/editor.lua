@@ -3,7 +3,6 @@ return {
     "rlue/vim-barbaric",
     event = "InsertEnter",
   },
-
   {
     "nvim-telescope/telescope.nvim",
     keys = {
@@ -96,5 +95,22 @@ return {
       { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
       { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
     },
+  },
+  {
+    "alexghergh/nvim-tmux-navigation",
+    keys = {
+      { "<C-h>", "<Cmd>NvimTmuxNavigateLeft<cr>", desc = "NvimTmuxNavigateLeft" },
+      { "<C-j>", "<Cmd>NvimTmuxNavigateDown<cr>", desc = "NvimTmuxNavigateDown" },
+      { "<C-k>", "<Cmd>NvimTmuxNavigateUp<cr>", desc = "NvimTmuxNavigateUp" },
+      { "<C-l>", "<Cmd>NvimTmuxNavigateRight<cr>", desc = "NvimTmuxNavigateRight" },
+      { "<C-\\>", "<Cmd>NvimTmuxNavigateLastActive<cr>", desc = "NvimTmuxNavigateLastActive" },
+      -- vim.keymap.set("n", "<C-Space>", nvim_tmux_nav.NvimTmuxNavigateNext)
+    },
+    config = function()
+      local nvim_tmux_nav = require("nvim-tmux-navigation")
+      nvim_tmux_nav.setup({
+        -- disable_when_zoomed = true, -- defaults to false
+      })
+    end,
   },
 }
