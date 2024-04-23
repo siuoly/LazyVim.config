@@ -1,4 +1,4 @@
 return {
-  "ojroques/vim-oscyank",
-  lazy = false,
+  --   "ojroques/vim-oscyank",
+  --   lazy = false,
 }
