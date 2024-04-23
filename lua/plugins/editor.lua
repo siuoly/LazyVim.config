@@ -145,4 +145,12 @@ return {
       }
     end,
   },
+  {
+    "folke/noice.nvim", -- https://github.com/LazyVim/LazyVim/issues/556 add border on Preview window
+    opts = {
+      presets = {
+        lsp_doc_border = true,
+      },
+    },
+  },
 }

@@ -2,4 +2,5 @@
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 -- Add any additional options here
 vim.o.rnu = false
-vim.o.cb = "unnamedplus"
+vim.o.pumblend = 0 -- transparent, 0 is opaque
+vim.o.winend = 30 -- transparent, 0 is opaque
