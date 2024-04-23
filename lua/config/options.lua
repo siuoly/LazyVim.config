@@ -4,3 +4,4 @@
 vim.o.rnu = false
 vim.o.pumblend = 0 -- transparent, 0 is opaque
 vim.o.winend = 30 -- transparent, 0 is opaque
+vim.o.clipboard = "unnamedplus"
