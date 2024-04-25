@@ -6,7 +6,10 @@ local keymap = vim.keymap.set
 local opts = { silent = true, buffer = true, noremap = true }
 -- vim-slime config -----
 -- space-cr:region
-
+local tmux_ipython_plot= function ()
+  vim.cmd[[SlimeSend1 plt.savefig('a.png');plt.close()]]
+  vim.cmd[[SlimeSend1 !kitten icat a.png]]
+end
 keymap("n", "<space>r"      , [[<Cmd>SlimeSend0 expandcmd('\\%run %').. "\n"<cr>]], { desc="Slime run python file",silent = true, buffer = true })
 keymap("n", "<space>w"      , [[<Cmd>SlimeSend0 expandcmd('<cword>').. "\n"<cr>]] , { desc="Slime run python cursor word",silent = true, buffer = true })
 keymap("n", "<space>W"      , [[<Cmd>SlimeSend0 expandcmd('<cWORD>').. "\n"<cr>]] , { desc="Slime run python cursor WORD",silent = true, buffer = true })
@@ -14,6 +17,9 @@ keymap("n", "<space>n"      , [[<Cmd>SlimeSendCurrentLine<cr>]]                 
 keymap("n", "<space><space>", [[<Plug>SlimeParagraphSend]]                        , { desc="Slime run python paragraph",silent = true, buffer = true })
 keymap("x", "<space><space>", "<Plug>SlimeRegionSend"                             , { desc="Slime run python select region",noremap = true, buffer = true })
 keymap("n", "<c-cr>"        , [[<Plug>SlimeSendCell]]                             , { desc="Slime run python notation region",remap = true, buffer = true })
+keymap("n", "<f4>"        , tmux_ipython_plot, { desc="Slime send ipython plot cmd",remap = true, buffer = true })
+
+
 -- keymap("n", "<space>c", ipython.run_class, {opts})
 -- keymap("n", "<space>f", ipython.run_function, {opts})
 ------------ pdb -----------------------
