@@ -45,3 +45,10 @@ map("v", "<c-s-k>", ":m '<-2<cr>gv=gv", { desc = "Move Up" })
 -- vim.keymap.del("n", "<C-k>")
 -- vim.keymap.del("n", "<C-l>")
 map("n", "<leader>qq", "<cmd>q!<cr>", { desc = "Quick Quit" })
+
+map("n", "<c-.>",
+  function()
+    require("lazyvim.util").terminal("/bin/zsh", { cwd="/home/siuoly/myLib" } )
+  end, { desc="Ranger terminal"}
+)
+map("t", "<c-.>", "<Cmd>close<cr>",{desc="disable terminal"})
