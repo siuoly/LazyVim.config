@@ -1,8 +1,9 @@
 vim.opt_local.spell = false
 vim.opt.number = false
--- local keymap = vim.keymap.set
--- local opts = { silent = true ,buffer=true}
+local keymap = vim.keymap.set
+local opts = { silent = true ,buffer=true}
 -- keymap("n","gcc","I~<esc>A~<esc>",opts)
+keymap("x","gc","gsa~",{silent=true,buffer=true,remap=true})
 
 -- Search UP for a markdown header
 -- Make sure to follow proper markdown convention, and you have a single H1

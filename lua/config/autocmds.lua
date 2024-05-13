@@ -10,3 +10,7 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
     vim.b.autoformat = false
   end,
 })
+vim.api.nvim_create_autocmd({ "FileType" }, {
+  pattern = {"markdown"},
+  command = "setlocal nospell",
+})
