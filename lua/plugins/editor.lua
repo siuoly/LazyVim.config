@@ -210,6 +210,16 @@ return {
     },
   },
   {
+    'MeanderingProgrammer/markdown.nvim',
+    -- name = 'render-markdown', -- Only needed if you have another plugin named markdown.nvim
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    config = function()
+        require('render-markdown').setup({
+          headings = { 'H1 ', 'H2 ', 'H3 ', 'H4 ', 'H5 ', 'H6 ' },
+      })
+    end,
+  },
+  {
     "nvim-neo-tree/neo-tree.nvim",
     opts = {
       window = {
