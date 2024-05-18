@@ -45,4 +45,14 @@ return {
       })
     end,
   }
+  {
+    "rafamadriz/friendly-snippets",
+    config = function()
+      require("luasnip.loaders.from_vscode").lazy_load({paths = "~/.config/mysnip"})
+      -- require("luasnip.loaders.from_vscode").lazy_load() -- enable for firendly-snip
+    end,
+    lazy=true
+  },
+  -- disable it on /home/siuoly/.local/share/nvim/lazy/LazyVim/lua/lazyvim/plugins/coding.lua:104
+  { "garymjr/nvim-snippets", enabled=false },
 }

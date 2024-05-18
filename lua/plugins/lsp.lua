@@ -20,7 +20,8 @@ return{
     opts = {
       linters_by_ft = {
         markdown = { },
-        python = {}
+        python = {},
+        json = {"jq"}
       },
       -- linters = {
       --   python={}
