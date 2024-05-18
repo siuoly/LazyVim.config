@@ -1,10 +1,4 @@
 return {
-  {
-    "L3MON4D3/LuaSnip",
-    keys = function()
-      return {}
-    end,
-  },
   { -- http://www.lazyvim.org/configuration/recipes#supertab
     "hrsh7th/nvim-cmp",
     ---@param opts cmp.ConfigSchema
@@ -42,9 +36,25 @@ return {
             fallback()
           end
         end, { "i", "s" }),
+        ["<C-j>"] = cmp.mapping({ -- https://github.com/hrsh7th/nvim-cmp/issues/429#issuecomment-954121524
+          i = function()
+            if cmp.visible() then
+              cmp.abort()
+            else
+              cmp.complete()
+            end
+          end,
+          c = function()
+            if cmp.visible() then
+              cmp.close()
+            else
+              cmp.complete()
+            end
+          end,
+        }),
       })
     end,
-  }
+  },
   {
     "rafamadriz/friendly-snippets",
     config = function()
