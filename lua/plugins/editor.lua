@@ -110,10 +110,10 @@ return {
               ["<C-Up>"] = actions.cycle_history_prev,
               ["<C-f>"] = actions.preview_scrolling_down,
               ["<C-b>"] = actions.preview_scrolling_up,
-              ["<c-w>"] = actions.send_selected_to_qflist + actions.open_qflist,
+              ["<c-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
             },
             n = {
-              ["<c-w>"] = actions.send_selected_to_qflist + actions.open_qflist,
+              ["<c-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
               ["q"] = actions.close,
             },
           },
@@ -230,7 +230,14 @@ return {
         width = 25,
         mappings = {
           ["l"] = "open",
-          ["h"]= "close_node",
+          ["h"] = function(state)
+            local node = state.tree:get_node()
+              if node.type == 'directory' and node:is_expanded() then
+                require'neo-tree.sources.filesystem'.toggle_directory(state, node)
+              else
+                require'neo-tree.ui.renderer'.focus_node(state, node:get_parent_id())
+              end
+            end,
           ["dd"] = "delete",
           ["d"] = "none",
           ["<cr>"] = "open_drop",
@@ -239,6 +246,15 @@ return {
               show_path = "relative" -- "none", "relative", "absolute"
             }
           },
+          ['<tab>'] = function (state)
+            local node = state.tree:get_node()
+            if require("neo-tree.utils").is_expandable(node) then
+              state.commands["toggle_node"](state)
+            else
+              state.commands['open'](state)
+              vim.cmd('Neotree reveal')                  
+            end
+          end,
         }
       },
       -- buffers = { 
