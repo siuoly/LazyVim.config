@@ -222,8 +222,45 @@ return {
   {
     "nvim-neo-tree/neo-tree.nvim",
     opts = {
+      source_selector = {
+          winbar = true,
+          statusline = false
+      },
       window = {
         width = 25,
+        mappings = {
+          ["l"] = "open",
+          ["h"]= "close_node",
+          ["dd"] = "delete",
+          ["d"] = "none",
+          ["<cr>"] = "open_drop",
+          ["a"] = { 
+            "add", config = {
+              show_path = "relative" -- "none", "relative", "absolute"
+            }
+          },
+        }
+      },
+      -- buffers = { 
+      --   follow_current_file = { 
+      --     enabled = true, -- This will find and focus the file in the active buffer every time -- -- the current file is changed while the tree is open.
+      --   },
+      -- },
+      filesystem = {
+        commands = {
+          -- Override delete to use trash instead of rm
+          delete = function(state)
+            local path = state.tree:get_node().path
+            vim.fn.system({ "rm","-r", vim.fn.fnameescape(path) }) -- trash or rm command
+            require("neo-tree.sources.manager").refresh(state.name)
+          end,
+        },
+      --   follow_current_file = {
+      --     bind_to_cwd=true,
+      --     enabled = false, -- This will find and focus the file in the active buffer every time
+      --     --               -- the current file is changed while the tree is open.
+      --     leave_dirs_open = true, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
+      --   },
       },
     }
   }
