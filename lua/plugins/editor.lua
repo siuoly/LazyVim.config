@@ -4,122 +4,64 @@ return {
     event = "InsertEnter",
   },
   {
-    "nvim-telescope/telescope.nvim",
+    "danielfalk/smart-open.nvim",
+    branch = "0.2.x",
+    config = function()
+      require("lazyvim.util").on_load("telescope.nvim", function()
+        require("telescope").load_extension("smart_open")
+      end)
+    end,
     keys = {
-      {
-        "<leader>,",
-        "<cmd>Telescope buffers sort_mru=true sort_lastused=true<cr>",
-        desc = "Switch Buffer",
-      },
-      { "<leader>/", LazyVim.telescope("live_grep"), desc = "Grep (Root Dir)" },
-      { "<leader>:", "<cmd>Telescope command_history<cr>", desc = "Command History" },
-      { "<leader><space>", LazyVim.telescope("files"), desc = "Find Files (Root Dir)" },
-      -- find
-      { "<leader>fb", "<cmd>Telescope buffers sort_mru=true sort_lastused=true<cr>", desc = "Buffers" },
-      { "<leader>fc", LazyVim.telescope.config_files(), desc = "Find Config File" },
-      { "<leader>ff", LazyVim.telescope("files"), desc = "Find Files (Root Dir)" },
-      { "<leader>fF", LazyVim.telescope("files", { cwd = false }), desc = "Find Files (cwd)" },
-      { "<leader>fg", "<cmd>Telescope git_files<cr>", desc = "Find Files (git-files)" },
-      { "<leader>fr", "<cmd>Telescope oldfiles<cr>", desc = "Recent" },
-      { "<leader>fR", LazyVim.telescope("oldfiles", { cwd = vim.uv.cwd() }), desc = "Recent (cwd)" },
-      -- git
-      { "<leader>gc", "<cmd>Telescope git_commits<CR>", desc = "Commits" },
-      { "<leader>gs", "<cmd>Telescope git_status<CR>", desc = "Status" },
-      -- search
-      { '<leader>s"', "<cmd>Telescope registers<cr>", desc = "Registers" },
-      { "<leader>sb", "<cmd>Telescope current_buffer_fuzzy_find<cr>", desc = "Buffer" },
-      { "<leader>sC", "<cmd>Telescope commands<cr>", desc = "Commands" },
-      { "<leader>sd", "<cmd>Telescope diagnostics bufnr=0<cr>", desc = "Document Diagnostics" },
-      { "<leader>sD", "<cmd>Telescope diagnostics<cr>", desc = "Workspace Diagnostics" },
-      { "<leader>sg", LazyVim.telescope("live_grep"), desc = "Grep (Root Dir)" },
-      { "<leader>sG", LazyVim.telescope("live_grep", { cwd = false }), desc = "Grep (cwd)" },
-      { "<leader>sh", "<cmd>Telescope help_tags<cr>", desc = "Help Pages" },
-      { "<leader>sH", "<cmd>Telescope highlights<cr>", desc = "Search Highlight Groups" },
-      { "<leader>sk", "<cmd>Telescope keymaps<cr>", desc = "Key Maps" },
-      { "<leader>sM", "<cmd>Telescope man_pages<cr>", desc = "Man Pages" },
-      { "<leader>sm", "<cmd>Telescope marks<cr>", desc = "Jump to Mark" },
-      { "<leader>so", "<cmd>Telescope vim_options<cr>", desc = "Options" },
-      { "<leader>sR", "<cmd>Telescope resume<cr>", desc = "Resume" },
-      { "<leader>sw", LazyVim.telescope("grep_string", { word_match = "-w" }), desc = "Word (Root Dir)" },
-      { "<leader>sW", LazyVim.telescope("grep_string", { cwd = false, word_match = "-w" }), desc = "Word (cwd)" },
-      { "<leader>sw", LazyVim.telescope("grep_string"), mode = "v", desc = "Selection (Root Dir)" },
-      { "<leader>sW", LazyVim.telescope("grep_string", { cwd = false }), mode = "v", desc = "Selection (cwd)" },
-      { "<leader>uC", LazyVim.telescope("colorscheme", { enable_preview = true }), desc = "Colorscheme with Preview" },
-      {
-        "<leader>ss",
-        function()
-          require("telescope.builtin").lsp_document_symbols({
-            symbols = require("lazyvim.config").get_kind_filter(),
-          })
-        end,
-        desc = "Goto Symbol",
-      },
-      {
-        "<leader>sS",
-        function()
-          require("telescope.builtin").lsp_dynamic_workspace_symbols({
-            symbols = require("lazyvim.config").get_kind_filter(),
-          })
-        end,
-        desc = "Goto Symbol (Workspace)",
-      },
+      -- {"<leader><space>","<cmd>Telescope smart_open<cr>", {noremap=true,silent=true}}
     },
-    opts = function()
+    dependencies = {
+      "kkharji/sqlite.lua",
+      -- Only required if using match_algorithm fzf
+      { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+      -- Optional.  If installed, native fzy will be used when match_algorithm is fzy
+      { "nvim-telescope/telescope-fzy-native.nvim" },
+    },
+  },
+  {
+    "nvim-telescope/telescope.nvim",
+    dependencies = {
+      { "danielfalk/smart-open.nvim" },
+    },
+    keys = {
+      { "<leader>p", "<Cmd>Telescope projects<CR>", desc = "Projects" },
+      { "<leader><space>", "<cmd>Telescope smart_open<cr>", { noremap = true, silent = true } },
+      { "<leader>fp", enabled = false },
+    },
+    opts = function(_, opts)
       local actions = require("telescope.actions")
-
       local open_with_trouble = function(...)
         return require("trouble.providers.telescope").open_with_trouble(...)
       end
       local open_selected_with_trouble = function(...)
         return require("trouble.providers.telescope").open_selected_with_trouble(...)
       end
-      local find_files_no_ignore = function()
-        local action_state = require("telescope.actions.state")
-        local line = action_state.get_current_line()
-        LazyVim.telescope("find_files", { no_ignore = true, default_text = line })()
-      end
-      local find_files_with_hidden = function()
-        local action_state = require("telescope.actions.state")
-        local line = action_state.get_current_line()
-        LazyVim.telescope("find_files", { hidden = true, default_text = line })()
-      end
-      return {
-        defaults = {
-          prompt_prefix = " ",
-          selection_caret = " ",
-          -- open files in the first window that is an actual file.
-          -- use the current window if no other window is available.
-          get_selection_window = function()
-            local wins = vim.api.nvim_list_wins()
-            table.insert(wins, 1, vim.api.nvim_get_current_win())
-            for _, win in ipairs(wins) do
-              local buf = vim.api.nvim_win_get_buf(win)
-              if vim.bo[buf].buftype == "" then
-                return win
-              end
-            end
-            return 0
-          end,
-          mappings = {
-            i = {
-              ["<c-t>"] = open_with_trouble,
-              ["<a-t>"] = open_selected_with_trouble,
-              ["<a-i>"] = find_files_no_ignore,
-              ["<a-h>"] = find_files_with_hidden,
-              ["<C-Down>"] = actions.cycle_history_next,
-              ["<C-Up>"] = actions.cycle_history_prev,
-              ["<C-f>"] = actions.preview_scrolling_down,
-              ["<C-b>"] = actions.preview_scrolling_up,
-              ["<c-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
-            },
-            n = {
-              ["<c-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
-              ["q"] = actions.close,
-            },
+      opts.extensions = vim.tbl_deep_extend("force", opts.extensions or {}, {
+        smart_open = { match_algorithm = "fzy" },
+      })
+      opts.defaults = vim.tbl_deep_extend("force", opts.defaults or {}, {
+        mappings = {
+          i = {
+            ["<c-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
+          },
+          n = {
+            ["<c-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
+            ["<c-t>"] = open_with_trouble,
+            ["<a-t>"] = open_selected_with_trouble,
           },
         },
-      }
+      })
     end,
+  },
+  {
+    "folke/flash.nvim",
+    opts = {
+      highlight = { backdrop = false, matches = false },
+    },
   },
   {
     "echasnovski/mini.bufremove",
@@ -203,19 +145,119 @@ return {
   },
   {
     "folke/noice.nvim", -- https://github.com/LazyVim/LazyVim/issues/556 add border on Preview window
-    opts = {
-      presets = {
+    opts = function(_, opts)
+      opts.presets = vim.tbl_deep_extend("force", opts.presets or {}, {
         lsp_doc_border = true,
-      },
-    },
+      })
+      opts.lsp = vim.tbl_deep_extend("force", opts.lsp or {}, {
+        signature = {
+          enabled = true,
+          auto_open = {
+            enabled = false,
+            trigger = false, -- Automatically show signature help when typing a trigger character from the LSP
+            luasnip = true, -- Will open signature help when jumping to Luasnip insert nodes
+            throttle = 50, -- Debounce lsp signature help request by 50ms
+          },
+        },
+      })
+    end,
   },
   {
-    'MeanderingProgrammer/markdown.nvim',
-    -- name = 'render-markdown', -- Only needed if you have another plugin named markdown.nvim
-    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    "jbyuki/nabla.nvim",
+    ft = "markdown",
     config = function()
-        require('render-markdown').setup({
-          headings = { 'H1 ', 'H2 ', 'H3 ', 'H4 ', 'H5 ', 'H6 ' },
+      -- require("nabla").toggle_virt({ autogen = true, silient = false })
+      vim.keymap.set("n", "<c-p>", require("nabla").popup, { desc = "popup window show formula" })
+      vim.api.nvim_create_user_command("NablaToggle", function()
+        require("nabla").toggle_virt({ autogen = true, silient = false })
+      end, {})
+    end,
+  },
+  {
+    "b0o/incline.nvim",
+    config = function()
+      local helpers = require("incline.helpers")
+      local devicons = require("nvim-web-devicons")
+      require("incline").setup({
+        window = {
+          padding = 0,
+          margin = { horizontal = 0 },
+        },
+        render = function(props)
+          local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
+          local ft_icon, ft_color = require("nvim-web-devicons").get_icon_color(filename)
+          local modified = vim.bo[props.buf].modified and "bold,italic" or "bold"
+          local function get_git_diff()
+            local icons = { added = " ", modified = " ", removed = " " }
+            icons["changed"] = icons.modified
+            local signs = vim.b[props.buf].gitsigns_status_dict
+            local labels = {}
+            if signs == nil then
+              return labels
+            end
+            for name, icon in pairs(icons) do
+              if tonumber(signs[name]) and signs[name] > 0 then
+                table.insert(labels, { icon .. signs[name] .. " ", group = "Diff" .. name })
+              end
+            end
+            if #labels > 0 then
+              table.insert(labels, { "┊ " })
+            end
+            return labels
+          end
+          local function get_diagnostic_label()
+            local icons = { Error = " ", Warn = " ", Hint = " ", Info = " " }
+            local label = {}
+
+            for severity, icon in pairs(icons) do
+              local n = #vim.diagnostic.get(props.buf, { severity = vim.diagnostic.severity[string.upper(severity)] })
+              if n > 0 then
+                table.insert(label, { icon .. n .. " ", group = "DiagnosticSign" .. severity })
+              end
+            end
+            if #label > 0 then
+              table.insert(label, { "┊ " })
+            end
+            return label
+          end
+
+          local buffer = {
+            { get_diagnostic_label() },
+            { get_git_diff() },
+            { (ft_icon or "") .. " ", guifg = ft_color, guibg = "none" },
+            { filename .. " ", gui = modified },
+            -- { "┊  " .. vim.api.nvim_win_get_number(props.win), group = "DevIconWindows" },
+          }
+          return buffer
+
+          --     local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
+          --     if filename == "" then
+          --       filename = "[No Name]"
+          --     end
+          --               local bgcol = props.focused and '#41798f' or '#44406e'
+          --     local ft_icon, ft_color = devicons.get_icon_color(filename)
+          --     local modified = vim.bo[props.buf].modified
+          --     return {
+          --       ft_icon and { " ", ft_icon, " ", guibg = ft_color, guifg = helpers.contrast_color(ft_color) } or "",
+          --       " ",
+          --       { filename, gui = modified and "bold,italic" or "bold" },
+          --       " ",
+          --       guibg = "#44406e",
+          --     }
+        end,
+      })
+    end,
+    -- Optional: Lazy load Incline
+    event = "VeryLazy",
+  },
+  {
+    "MeanderingProgrammer/markdown.nvim",
+    enabled = false,
+    -- name = 'render-markdown', -- Only needed if you have another plugin named markdown.nvim
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    config = function()
+      require("render-markdown").setup({
+        headings = { "H1 ", "H2 ", "H3 ", "H4 ", "H5 ", "H6 " },
       })
     end,
   },
@@ -223,8 +265,7 @@ return {
     "nvim-neo-tree/neo-tree.nvim",
     opts = {
       source_selector = {
-          winbar = true,
-          statusline = false
+        statusline = false,
       },
       window = {
         width = 25,
@@ -232,33 +273,34 @@ return {
           ["l"] = "open",
           ["h"] = function(state)
             local node = state.tree:get_node()
-              if node.type == 'directory' and node:is_expanded() then
-                require'neo-tree.sources.filesystem'.toggle_directory(state, node)
-              else
-                require'neo-tree.ui.renderer'.focus_node(state, node:get_parent_id())
-              end
-            end,
+            if node.type == "directory" and node:is_expanded() then
+              require("neo-tree.sources.filesystem").toggle_directory(state, node)
+            else
+              require("neo-tree.ui.renderer").focus_node(state, node:get_parent_id())
+            end
+          end,
           ["dd"] = "delete",
           ["d"] = "none",
           ["<cr>"] = "open_drop",
-          ["a"] = { 
-            "add", config = {
-              show_path = "relative" -- "none", "relative", "absolute"
-            }
+          ["a"] = {
+            "add",
+            config = {
+              show_path = "relative", -- "none", "relative", "absolute"
+            },
           },
-          ['<tab>'] = function (state)
+          ["<tab>"] = function(state)
             local node = state.tree:get_node()
             if require("neo-tree.utils").is_expandable(node) then
               state.commands["toggle_node"](state)
             else
-              state.commands['open'](state)
-              vim.cmd('Neotree reveal')                  
+              state.commands["open"](state)
+              vim.cmd("Neotree reveal")
             end
           end,
-        }
+        },
       },
-      -- buffers = { 
-      --   follow_current_file = { 
+      -- buffers = {
+      --   follow_current_file = {
       --     enabled = true, -- This will find and focus the file in the active buffer every time -- -- the current file is changed while the tree is open.
       --   },
       -- },
@@ -267,17 +309,25 @@ return {
           -- Override delete to use trash instead of rm
           delete = function(state)
             local path = state.tree:get_node().path
-            vim.fn.system({ "rm","-r", vim.fn.fnameescape(path) }) -- trash or rm command
+            vim.fn.system({ "rm", "-r", vim.fn.fnameescape(path) }) -- trash or rm command
             require("neo-tree.sources.manager").refresh(state.name)
           end,
         },
-      --   follow_current_file = {
-      --     bind_to_cwd=true,
-      --     enabled = false, -- This will find and focus the file in the active buffer every time
-      --     --               -- the current file is changed while the tree is open.
-      --     leave_dirs_open = true, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
-      --   },
+        --   follow_current_file = {
+        --     bind_to_cwd=true,
+        --     enabled = false, -- This will find and focus the file in the active buffer every time
+        --     --               -- the current file is changed while the tree is open.
+        --     leave_dirs_open = true, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
+        --   },
       },
-    }
-  }
+    },
+  },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = {
+      ensure_installed = {
+        "latex", -- for makrdown latex
+      },
+    },
+  },
 }
