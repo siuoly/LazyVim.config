@@ -1,9 +1,11 @@
 {
   "extras": [
-    "lazyvim.plugins.extras.lang.python"
+    "lazyvim.plugins.extras.editor.dial",
+    "lazyvim.plugins.extras.lang.python",
+    "lazyvim.plugins.extras.util.project"
   ],
   "news": {
-    "NEWS.md": "4541"
+    "NEWS.md": "4964"
   },
-  "version": 3
+  "version": 4
 }

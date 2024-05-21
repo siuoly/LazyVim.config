@@ -28,6 +28,7 @@ return {
       { "danielfalk/smart-open.nvim" },
     },
     keys = {
+      { "<leader>r", LazyVim.telescope("live_grep"), desc = "Grep (Root Dir)" },
       { "<leader>p", "<Cmd>Telescope projects<CR>", desc = "Projects" },
       { "<leader><space>", "<cmd>Telescope smart_open<cr>", { noremap = true, silent = true } },
       { "<leader>fp", enabled = false },
@@ -40,6 +41,13 @@ return {
       local open_selected_with_trouble = function(...)
         return require("trouble.providers.telescope").open_selected_with_trouble(...)
       end
+      opts.pickers = vim.tbl_deep_extend("force", opts.pickers or {}, {
+        live_grep = {
+          mappings = {
+            i = { ["<c-f>"] = actions.to_fuzzy_refine },
+          },
+        },
+      })
       opts.extensions = vim.tbl_deep_extend("force", opts.extensions or {}, {
         smart_open = { match_algorithm = "fzy" },
       })
