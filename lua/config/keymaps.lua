@@ -14,11 +14,10 @@ local function dict_search()
   -- sdcv:dictionary command  grep:color output command
   vim.api.nvim_command([[terminal sdcv <cword>|grep --color=always -zP -e "-->.*\n"]])
   vim.cmd("tab split")
-  vim.keymap.set("n", "q", ":bd!<cr>", { buffer = true })
+  vim.keymap.set("n", "q", ":bd!<cr>", { buffer = true,nowait=true })
 end
 local function dict_pronounce()
-  local nvterm = require("nvterm.terminal")
-  nvterm.send("trans -sp -b " .. vim.fn.expand("<cword>"), "float")
+  vim.system { 'trans', '-sp', '-b', vim.fn.expand '<cword>' }
 end
 
 map("n", "<cr>", enter, { nowait = true, expr = true })
