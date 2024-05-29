@@ -39,3 +39,11 @@ vim.keymap.set("n", "gj", function()
   vim.cmd("nohlsearch")
 end, { desc = "Go to next markdown header" })
 -- vim.diagnostic.disable(0)
+
+
+-- surround
+vim.keymap.set("x", "<c-b>","2gsa*",{remap=true,desc="markdown bold"})
+vim.keymap.set("x", "<c-i>","gsa*" ,{remap=true,desc="markdown italic"})
+vim.keymap.set("x", "<c-[>","gsa]" ,{remap=true,desc="markdown bracket"})
+vim.keymap.set("x", "<c-s>","gsa~" ,{remap=true,desc="markdown bracket"})
+vim.keymap.set("x", "<c-`>","gsa`" ,{remap=true,desc="markdown bracket"})
