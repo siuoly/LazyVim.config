@@ -4,6 +4,56 @@ return {
     event = "InsertEnter",
   },
   {
+      "vhyrro/luarocks.nvim",
+      priority = 1001, -- this plugin needs to run before anything else
+      opts = {
+          rocks = { "magick" },
+      },
+  },
+  {
+      "3rd/image.nvim",
+      ft = "markdown",
+      opts = {
+        integrations = {
+          markdown = { enabled = true, },
+        },
+        editor_only_render_when_focused = false
+      },
+      dependencies = { "luarocks.nvim" },
+  },
+  {
+      "iamcco/markdown-preview.nvim",
+      cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+      ft = { "markdown" },
+      build = function() vim.fn["mkdp#util#install"]() end,
+  },
+  {
+    "HakonHarnes/img-clip.nvim",
+    event = "VeryLazy",
+    opts = {
+      -- add options here
+      -- or leave it empty to use the default settings
+      filetypes = {
+        markdown = {
+          relative_to_current_file=true,
+          dir_path="img",
+          show_dir_path_in_prompt = true,
+          template = "![image]($FILE_PATH)",
+        }
+      }
+    },
+    -- keys = {      { "<leader>p", "<cmd>PasteImage<cr>", desc = "Paste image from system clipboard" },    },
+    commands = {"PasteImage"},
+  },
+  {
+    "hedyhli/markdown-toc.nvim",
+    ft = "markdown",  -- Lazy load on markdown filetype
+    cmd = { "Mtoc" }, -- Or, lazy load on "Mtoc" command
+    opts = {
+      -- Your configuration here (optional)
+    },
+  },
+  {
     "danielfalk/smart-open.nvim",
     branch = "0.2.x",
     config = function()
@@ -23,10 +73,32 @@ return {
     },
   },
   {
+    'stevearc/aerial.nvim',
+    keys = {
+      {"<leader>t","<cmd>AerialOpen<cr>", desc = "Code outline.[T]oc "}
+    },
+    opts = {
+      on_attach = function(bufnr)
+        -- Jump forwards/backwards with '{' and '}'
+        vim.keymap.set("n", "{", "<cmd>AerialPrev<CR>", { buffer = bufnr })
+        vim.keymap.set("n", "}", "<cmd>AerialNext<CR>", { buffer = bufnr })
+      end,
+    },
+    -- Optional dependencies
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-tree/nvim-web-devicons"
+    },
+  },
+  {
     "nvim-telescope/telescope.nvim",
     dependencies = {
       { "danielfalk/smart-open.nvim" },
     },
+      cmd = function()
+          vim.api.nvim_create_user_command('Toc', "Trouble lsp_document_symbols win.position=right"
+          , { nargs = '*' })
+      end,
     keys = {
       { "<leader>r", LazyVim.telescope("live_grep"), desc = "Grep (Root Dir)" },
       { "<leader>p", "<Cmd>Telescope projects<CR>", desc = "Projects" },
@@ -105,10 +177,10 @@ return {
   {
     "alexghergh/nvim-tmux-navigation",
     keys = {
-      { "<C-h>", "<Cmd>NvimTmuxNavigateLeft<cr>", desc = "NvimTmuxNavigateLeft" },
-      { "<C-j>", "<Cmd>NvimTmuxNavigateDown<cr>", desc = "NvimTmuxNavigateDown" },
-      { "<C-k>", "<Cmd>NvimTmuxNavigateUp<cr>", desc = "NvimTmuxNavigateUp" },
-      { "<C-l>", "<Cmd>NvimTmuxNavigateRight<cr>", desc = "NvimTmuxNavigateRight" },
+      { "<M-h>", "<Cmd>NvimTmuxNavigateLeft<cr>", desc = "NvimTmuxNavigateLeft" },
+      { "<M-j>", "<Cmd>NvimTmuxNavigateDown<cr>", desc = "NvimTmuxNavigateDown" },
+      { "<M-k>", "<Cmd>NvimTmuxNavigateUp<cr>", desc = "NvimTmuxNavigateUp" },
+      { "<M-l>", "<Cmd>NvimTmuxNavigateRight<cr>", desc = "NvimTmuxNavigateRight" },
       { "<C-\\>", "<Cmd>NvimTmuxNavigateLastActive<cr>", desc = "NvimTmuxNavigateLastActive" },
       -- vim.keymap.set("n", "<C-Space>", nvim_tmux_nav.NvimTmuxNavigateNext)
     },
@@ -153,6 +225,7 @@ return {
   },
   {
     "folke/noice.nvim", -- https://github.com/LazyVim/LazyVim/issues/556 add border on Preview window
+    -- enabled = false,
     opts = function(_, opts)
       opts.presets = vim.tbl_deep_extend("force", opts.presets or {}, {
         lsp_doc_border = true,
@@ -184,76 +257,29 @@ return {
   {
     "b0o/incline.nvim",
     config = function()
-      local helpers = require("incline.helpers")
-      local devicons = require("nvim-web-devicons")
-      require("incline").setup({
+      local helpers = require 'incline.helpers'
+      local devicons = require 'nvim-web-devicons'
+      require('incline').setup {
         window = {
           padding = 0,
           margin = { horizontal = 0 },
         },
         render = function(props)
-          local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
-          local ft_icon, ft_color = require("nvim-web-devicons").get_icon_color(filename)
-          local modified = vim.bo[props.buf].modified and "bold,italic" or "bold"
-          local function get_git_diff()
-            local icons = { added = " ", modified = " ", removed = " " }
-            icons["changed"] = icons.modified
-            local signs = vim.b[props.buf].gitsigns_status_dict
-            local labels = {}
-            if signs == nil then
-              return labels
-            end
-            for name, icon in pairs(icons) do
-              if tonumber(signs[name]) and signs[name] > 0 then
-                table.insert(labels, { icon .. signs[name] .. " ", group = "Diff" .. name })
-              end
-            end
-            if #labels > 0 then
-              table.insert(labels, { "┊ " })
-            end
-            return labels
+          local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ':t')
+          if filename == '' then
+            filename = '[No Name]'
           end
-          local function get_diagnostic_label()
-            local icons = { Error = " ", Warn = " ", Hint = " ", Info = " " }
-            local label = {}
-
-            for severity, icon in pairs(icons) do
-              local n = #vim.diagnostic.get(props.buf, { severity = vim.diagnostic.severity[string.upper(severity)] })
-              if n > 0 then
-                table.insert(label, { icon .. n .. " ", group = "DiagnosticSign" .. severity })
-              end
-            end
-            if #label > 0 then
-              table.insert(label, { "┊ " })
-            end
-            return label
-          end
-
-          local buffer = {
-            { get_diagnostic_label() },
-            { get_git_diff() },
-            { (ft_icon or "") .. " ", guifg = ft_color, guibg = "none" },
-            { filename .. " ", gui = modified },
-            -- { "┊  " .. vim.api.nvim_win_get_number(props.win), group = "DevIconWindows" },
+          local ft_icon, ft_color = devicons.get_icon_color(filename)
+          local modified = vim.bo[props.buf].modified
+          return {
+            ft_icon and { ' ', ft_icon, ' ', guibg = ft_color, guifg = helpers.contrast_color(ft_color) } or '',
+            ' ',
+            { filename, gui = modified and 'bold,italic' or 'bold' },
+            ' ',
+            guibg = '#44406e',
           }
-          return buffer
-
-          --     local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
-          --     if filename == "" then
-          --       filename = "[No Name]"
-          --     end
-          --               local bgcol = props.focused and '#41798f' or '#44406e'
-          --     local ft_icon, ft_color = devicons.get_icon_color(filename)
-          --     local modified = vim.bo[props.buf].modified
-          --     return {
-          --       ft_icon and { " ", ft_icon, " ", guibg = ft_color, guifg = helpers.contrast_color(ft_color) } or "",
-          --       " ",
-          --       { filename, gui = modified and "bold,italic" or "bold" },
-          --       " ",
-          --       guibg = "#44406e",
-          --     }
         end,
-      })
+      }
     end,
     -- Optional: Lazy load Incline
     event = "VeryLazy",

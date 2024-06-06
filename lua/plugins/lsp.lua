@@ -2,19 +2,19 @@ return{
   {
     "neovim/nvim-lspconfig",
     -- ---@class PluginLspOpts
-    -- opts = {
+    opts = {
     --   ---@type lspconfig.options
-    --   servers = {  -- disable linter
-    --     marksman = {
-    --       mason=false,
-    --     },
-    --     markdownlint = {
-    --       mason=false,
-    --     },
-    --   },
-    -- },
+      servers = {  -- disable linter
+        marksman = {
+          mason=false,
+          enabled=true,
+        },
+      --     markdownlint = {
+      --       mason=false,
+      --     },
+      },
+    },
   },
-
   {
     "mfussenegger/nvim-lint",
     opts = {
