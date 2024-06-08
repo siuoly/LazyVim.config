@@ -295,8 +295,10 @@ return {
       })
     end,
   },
+  
   {
     "nvim-neo-tree/neo-tree.nvim",
+    enabled = false,
     opts = {
       source_selector = {
         statusline = false,
