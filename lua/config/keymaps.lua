@@ -21,18 +21,13 @@ local function dict_pronounce()
 end
 
 map("n", "<cr>", enter, { nowait = true, expr = true })
+map("n", "<bs>", "<c-6>", { desc="go swap file" })
 map("i", "jk", "<esc>", {})
 map("i", "kj", "<esc>", {})
 map("n", "gss", dict_search, { desc = "sdcv dictionary search keyword" })
 map("n", "gsS", dict_pronounce, { desc = "Pronounce the word under cursor" })
 
 -- Move Lines
-vim.keymap.del("i", "<A-j>")
-vim.keymap.del("i", "<A-k>")
-vim.keymap.del("n", "<A-j>")
-vim.keymap.del("n", "<A-k>")
-vim.keymap.del("v", "<A-j>")
-vim.keymap.del("v", "<A-k>")
 map("n", "<c-s-j>", "<cmd>m .+1<cr>==", { desc = "Move Down" })
 map("n", "<c-s-k>", "<cmd>m .-2<cr>==", { desc = "Move Up" })
 map("i", "<c-s-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })

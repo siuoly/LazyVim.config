@@ -100,7 +100,7 @@ return {
           , { nargs = '*' })
       end,
     keys = {
-      { "<leader>r", LazyVim.telescope("live_grep"), desc = "Grep (Root Dir)" },
+      { "<leader>r", "<Cmd>Telescope live_grep<CR>", desc = "Grep (Root Dir)" },
       { "<leader>p", "<Cmd>Telescope projects<CR>", desc = "Projects" },
       { "<leader><space>", "<cmd>Telescope smart_open<cr>", { noremap = true, silent = true } },
       { "<leader>fp", enabled = false },

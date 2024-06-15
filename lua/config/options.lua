@@ -6,4 +6,4 @@ vim.o.pumblend = 0 -- transparent, 0 is opaque
 -- vim.o.winend = 30 -- transparent, 0 is opaque
 vim.o.clipboard = "unnamedplus"
 vim.api.nvim_set_hl(0,'@markup.italic.markdown_inline',{italic=true,fg="#c099ff" })
-vim.api.nvim_set_hl(0,'@markup.strong.markdown_inline',{bold=true,fg="#6d8086"})
+vim.api.nvim_set_hl(0,'@markup.strong.markdown_inline',{bold=true,fg="#7dcfff"})
