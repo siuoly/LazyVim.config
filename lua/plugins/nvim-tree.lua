@@ -5,6 +5,7 @@ return {
     -- {"<leader>e", "<Cmd>NvimTreeToggle<cr>",desc = "Nvim-tree toggle"}
     -- },
     config = function()
+      ----------------- exit directly without leaving nvim-tree buffer
       vim.api.nvim_create_autocmd("BufEnter", {
         group = vim.api.nvim_create_augroup("NvimTreeClose", {clear = true}),
         pattern = "NvimTree_*",
@@ -13,6 +14,7 @@ return {
           if layout[1] == "leaf" and vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(layout[2]), "filetype") == "NvimTree" and layout[3] == nil then vim.cmd("confirm quit") end
         end
       })
+
 
 
       local nvim_tree = require("nvim-tree")
@@ -31,6 +33,7 @@ return {
         end
       end
 
+      ----------------- open nvim-tree toggle or focus on it
       local nvimTreeFocusOrToggle = function()
         local nvimTree = require("nvim-tree.api")
         local currentBuf = vim.api.nvim_get_current_buf()
@@ -42,6 +45,17 @@ return {
         end
       end
       vim.keymap.set("n", "<leader>e", nvimTreeFocusOrToggle, { desc = "nvimTree Focus Or Toggle" })
+      vim.keymap.set("n", "<C-n>", nvimTreeFocusOrToggle, { desc = "nvimTree Focus Or Toggle" })
+
+
+      ----------------- open nvim-tree at current file buffer
+      local function open_nvim_tree_at_current_buffer()
+        local current_buffer_path = vim.fn.expand('%:p:h') -- 獲取當前 buffer 的目錄
+        api.tree.change_root(current_buffer_path) -- 更改 nvim-tree 的根目錄
+        api.tree.open() -- 打開 nvim-tree
+      end
+      -- 設置快捷鍵來調用這個函數
+      vim.keymap.set('n', '<leader>E', open_nvim_tree_at_current_buffer, { noremap = true, silent = true })
 
       nvim_tree.setup({
         on_attach = function(bufnr)
