@@ -4,56 +4,6 @@ return {
     event = "InsertEnter",
   },
   {
-      "vhyrro/luarocks.nvim",
-      priority = 1001, -- this plugin needs to run before anything else
-      opts = {
-          rocks = { "magick" },
-      },
-  },
-  {
-      "3rd/image.nvim",
-      ft = "markdown",
-      opts = {
-        integrations = {
-          markdown = { enabled = true, },
-        },
-        editor_only_render_when_focused = false
-      },
-      dependencies = { "luarocks.nvim" },
-  },
-  {
-      "iamcco/markdown-preview.nvim",
-      cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-      ft = { "markdown" },
-      build = function() vim.fn["mkdp#util#install"]() end,
-  },
-  {
-    "HakonHarnes/img-clip.nvim",
-    event = "VeryLazy",
-    opts = {
-      -- add options here
-      -- or leave it empty to use the default settings
-      filetypes = {
-        markdown = {
-          relative_to_current_file=true,
-          dir_path="img",
-          show_dir_path_in_prompt = true,
-          template = "![image]($FILE_PATH)",
-        }
-      }
-    },
-    -- keys = {      { "<leader>p", "<cmd>PasteImage<cr>", desc = "Paste image from system clipboard" },    },
-    commands = {"PasteImage"},
-  },
-  {
-    "hedyhli/markdown-toc.nvim",
-    ft = "markdown",  -- Lazy load on markdown filetype
-    cmd = { "Mtoc" }, -- Or, lazy load on "Mtoc" command
-    opts = {
-      -- Your configuration here (optional)
-    },
-  },
-  {
     "danielfalk/smart-open.nvim",
     branch = "0.2.x",
     config = function()
@@ -138,12 +88,6 @@ return {
     end,
   },
   {
-    "folke/flash.nvim",
-    opts = {
-      highlight = { backdrop = false, matches = false },
-    },
-  },
-  {
     "echasnovski/mini.bufremove",
     keys = {
       {
@@ -164,7 +108,7 @@ return {
     event = "VeryLazy",
     vscode = true,
     ---@type Flash.Config
-    opts = {},
+    opts = { highlight = { backdrop = false, matches = false }, },
     -- stylua: ignore
     keys = {
       { "s", mode = { "n", "x", "o" }, nil },
@@ -242,121 +186,6 @@ return {
         },
       })
     end,
-  },
-  {
-    "jbyuki/nabla.nvim",
-    ft = "markdown",
-    config = function()
-      -- require("nabla").toggle_virt({ autogen = true, silient = false })
-      vim.keymap.set("n", "<c-p>", require("nabla").popup, { desc = "popup window show formula" })
-      vim.api.nvim_create_user_command("NablaToggle", function()
-        require("nabla").toggle_virt({ autogen = true, silient = false })
-      end, {})
-    end,
-  },
-  {
-    "b0o/incline.nvim",
-    config = function()
-      local helpers = require 'incline.helpers'
-      local devicons = require 'nvim-web-devicons'
-      require('incline').setup {
-        window = {
-          padding = 0,
-          margin = { horizontal = 0 },
-        },
-        render = function(props)
-          local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ':t')
-          if filename == '' then
-            filename = '[No Name]'
-          end
-          local ft_icon, ft_color = devicons.get_icon_color(filename)
-          local modified = vim.bo[props.buf].modified
-          return {
-            ft_icon and { ' ', ft_icon, ' ', guibg = ft_color, guifg = helpers.contrast_color(ft_color) } or '',
-            ' ',
-            { filename, gui = modified and 'bold,italic' or 'bold' },
-            ' ',
-            guibg = '#44406e',
-          }
-        end,
-      }
-    end,
-    -- Optional: Lazy load Incline
-    event = "VeryLazy",
-  },
-  {
-    "MeanderingProgrammer/markdown.nvim",
-    enabled = false,
-    -- name = 'render-markdown', -- Only needed if you have another plugin named markdown.nvim
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
-    config = function()
-      require("render-markdown").setup({
-        headings = { "H1 ", "H2 ", "H3 ", "H4 ", "H5 ", "H6 " },
-      })
-    end,
-  },
-  
-  {
-    "nvim-neo-tree/neo-tree.nvim",
-    enabled = false,
-    opts = {
-      source_selector = {
-        statusline = false,
-      },
-      window = {
-        width = 25,
-        mappings = {
-          ["l"] = "open",
-          ["h"] = function(state)
-            local node = state.tree:get_node()
-            if node.type == "directory" and node:is_expanded() then
-              require("neo-tree.sources.filesystem").toggle_directory(state, node)
-            else
-              require("neo-tree.ui.renderer").focus_node(state, node:get_parent_id())
-            end
-          end,
-          ["dd"] = "delete",
-          ["d"] = "none",
-          ["<cr>"] = "open_drop",
-          ["a"] = {
-            "add",
-            config = {
-              show_path = "relative", -- "none", "relative", "absolute"
-            },
-          },
-          ["<tab>"] = function(state)
-            local node = state.tree:get_node()
-            if require("neo-tree.utils").is_expandable(node) then
-              state.commands["toggle_node"](state)
-            else
-              state.commands["open"](state)
-              vim.cmd("Neotree reveal")
-            end
-          end,
-        },
-      },
-      -- buffers = {
-      --   follow_current_file = {
-      --     enabled = true, -- This will find and focus the file in the active buffer every time -- -- the current file is changed while the tree is open.
-      --   },
-      -- },
-      filesystem = {
-        commands = {
-          -- Override delete to use trash instead of rm
-          delete = function(state)
-            local path = state.tree:get_node().path
-            vim.fn.system({ "rm", "-r", vim.fn.fnameescape(path) }) -- trash or rm command
-            require("neo-tree.sources.manager").refresh(state.name)
-          end,
-        },
-        --   follow_current_file = {
-        --     bind_to_cwd=true,
-        --     enabled = false, -- This will find and focus the file in the active buffer every time
-        --     --               -- the current file is changed while the tree is open.
-        --     leave_dirs_open = true, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
-        --   },
-      },
-    },
   },
   {
     "nvim-treesitter/nvim-treesitter",
