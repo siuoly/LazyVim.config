@@ -121,3 +121,5 @@ keymap("n", "<a-;>", pdb.ll, {})
 keymap("n", "<a-d>", pdb.exit, {})
 keymap("n", "<a-s>", pdb.sticky, {})
 keymap("n", "<a-r>", pdb.restart, {})
+
+vim.cmd"SetDiagnosticSeverity 3"  -- only show warning
