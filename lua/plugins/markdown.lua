@@ -1,21 +1,22 @@
 return {
-  {
-      "vhyrro/luarocks.nvim",
-      priority = 1001, -- this plugin needs to run before anything else
-      opts = {
-          rocks = { "magick" },
-      },
-  },
-  {
-      "3rd/image.nvim",
-      ft = "markdown",
-      opts = {
-        integrations = {
-          markdown = { enabled = true, },
-        },
-        editor_only_render_when_focused = false
-      },
-      dependencies = { "luarocks.nvim" }, },
+  -- {
+  --     "vhyrro/luarocks.nvim",
+  --     priority = 1001, -- this plugin needs to run before anything else
+  --     opts = {
+  --         rocks = { "magick" },
+  --     },
+  -- },
+  -- {
+  --     "3rd/image.nvim",
+  --     ft = "markdown",
+  --     opts = {
+  --       integrations = {
+  --         markdown = { enabled = true, },
+  --       },
+  --       editor_only_render_when_focused = false
+  --     },
+  --     dependencies = { "luarocks.nvim" },
+  -- },
   {
       "iamcco/markdown-preview.nvim",
       cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },

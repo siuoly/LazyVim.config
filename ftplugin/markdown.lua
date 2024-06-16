@@ -1,5 +1,6 @@
 vim.opt_local.spell = false
 vim.opt_local.number = false
+vim.opt_local.conceallevel = 0
 local keymap = vim.keymap.set
 local opts = { silent = true ,buffer=true}
 -- keymap("n","gcc","I~<esc>A~<esc>",opts)
