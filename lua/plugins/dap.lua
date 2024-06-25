@@ -1,39 +1,84 @@
 return{
   {
+    "mfussenegger/nvim-dap-python",
+    config = function ()
+      require("dap-python").setup()
+      -- https://vscode.dev.org.tw/docs/python/debugging#_debugging-by-attaching-over-a-network-connection
+      -- ... more options, see https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings
+      table.insert(require('dap').configurations.python, {
+        type = 'debugpy',
+        -- type = 'debugpy',
+        request = 'launch',
+        -- request = 'attach',
+        name = 'SSGC Debug',
+        program = 'citation_citeseer.py',
+        -- program = '${file}',
+        -- program = "${workspaceFolder}/startup.py",
+        -- "console": "externalTerminal"
+        -- console = "externalTerminal", -- 分隔 terminal
+        console = "integratedTerminal", -- 分隔 terminal
+        -- console = "internalConsole", -- dap terminal
+        args = {"--seed","443"}
+      })
+
+      -- python -m debugpy --listen 5678 ./myscript.py  -- local
+      -- python -m debugpy --listen 0.0.0.0:5678 ./myscript.py  -- remote e.g. docker
+      -- table.insert(require('dap').configurations.python, {
+      --     name= "Python Debugger: Attach",
+      --     type= "debugpy",
+      --     request= "attach",
+      --     connect= {
+      --       host= "localhost",
+      --       port= 5678
+      --     }
+      -- })
+
+      -- local dap = require('dap')
+      -- dap.defaults.fallback.external_terminal = {
+      --   command = 'xterm';
+      --   args = {'-e'};
+      -- }
+    end
+  },
+  {
     "mfussenegger/nvim-dap",
     keys = {
-      { "<f5>", function() require('dap').continue() end, desc = "Dap continue" },
-      { "<f4>", function() require('dap').toggle_breakpoint() end, desc = "Dap Toggle Breakpoint" },
+      -- { "<f5>", function() require('dap').continue() end, desc = "Dap continue" },
+      -- { "<f4>", function() require('dap').toggle_breakpoint() end, desc = "Dap Toggle Breakpoint" },
       { "<f3>", function() require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end, desc = "Dap Lop point message" },
     },
     config = function()
-      require("dap-python").setup("python3")
+      -- require("dap-python").setup("python3")
       vim.keymap.set('n', '<F10>', function() require('dap').step_over() end,{desc="Dap Step over"})
       vim.keymap.set('n', '<F11>', function() require('dap').step_into() end,{desc="Dap Step into"})
       vim.keymap.set('n', '<F12>', function() require('dap').step_out() end,{desc="Dap Step out"})
-      vim.keymap.set('n', '<Leader>dr', function() require('dap').repl.toggle() end,{desc="Dap Repl Toggle"})
+      -- vim.keymap.set('n', '<Leader>dr', function() require('dap').repl.toggle() end,{desc="Dap Repl Toggle"})
       -- vim.keymap.set('n', '<Leader>dl', function() require('dap').run_last() end,{desc="Dap Run Last"})
-      vim.keymap.set({'n', 'v'}, '<f6>', function()
-        require('dap.ui.widgets').hover()
-      end,{desc="Dap Hover Variable"})
-      vim.keymap.set({'n', 'v'}, '<f7>', function()
-        require('dap.ui.widgets').hover(vim.fn.expandcmd("\"shape:\"+repr(<cexpr>.shape)"))
-      end,{desc="Dap Hover Shape"})
-      vim.keymap.set({'n', 'v'}, '<Leader>dp', function()
-        require('dap.ui.widgets').preview()
-      end,{desc="Dap Preview"})
-      vim.keymap.set('n', '<Leader>df', function()
-        local widgets = require('dap.ui.widgets')
-        widgets.centered_float(widgets.frames)
-      end,{desc="Dap Frame"})
-      vim.keymap.set('n', '<Leader>ds', function()
-        local widgets = require('dap.ui.widgets')
-        widgets.sidebar(widgets.scopes).open()
-      end,{desc="Dap Scope Sidebar"})
+      -- vim.keymap.set({'n', 'v'}, '<f6>', function()
+      --   require('dap.ui.widgets').hover()
+      -- end,{desc="Dap Hover Variable"})
+      -- vim.keymap.set({'n', 'v'}, '<f7>', function()
+      --   require('dap.ui.widgets').hover(vim.fn.expandcmd("\"shape:\"+repr(<cexpr>.shape)"))
+      -- end,{desc="Dap Hover Shape"})
+      -- vim.keymap.set({'n', 'v'}, '<Leader>dp', function()
+      --   require('dap.ui.widgets').preview()
+      -- end,{desc="Dap Preview"})
+      -- vim.keymap.set('n', '<Leader>df', function()
+      --   local widgets = require('dap.ui.widgets')
+      --   widgets.centered_float(widgets.frames)
+      -- end,{desc="Dap Frame"})
+      -- vim.keymap.set('n', '<Leader>ds', function()
+      --   local widgets = require('dap.ui.widgets')
+      --   widgets.sidebar(widgets.scopes).open()
+      -- end,{desc="Dap Scope Sidebar"})
 
     vim.api.nvim_create_autocmd("Filetype", {
       pattern="dap-float",
-      command=[[nnoremap <buffer> q :q<cr>]],
+      command=[[
+      nnoremap <buffer> q :q<cr>
+      nnoremap <buffer> <f6> :q<cr>
+      nnoremap <buffer> <f7> :q<cr>
+      ]],
     })
 
     local dap_icon = {
@@ -56,17 +101,54 @@ return{
   {
     "rcarriga/nvim-dap-ui",
     opts = {
-
+      expand_lines = false,
+      layouts = {
+         {
+          elements = { {
+              id = "watches",
+              size = 0.3
+            }, {
+              id = "repl",
+              size = 0.4
+            }, {
+              id = "console",
+              size = 0.3
+            } },
+          position = "bottom",
+          size = 10
+        } },
+      floating = {
+        border = "single",
+        mappings = {
+          close = { "q" }
+        }
+      },
     },
-    dependencies = {"mfussenegger/nvim-dap", "nvim-neotest/nvim-nio"},
+    keys = {
+      { "<leader>du", function() require("dapui").toggle({ }) end, desc = "Dap UI" },
+      { "<f5>", function() require('dap').continue() end, desc = "Dap continue" },
+      { "<f6>", function() require("dap").run_to_cursor() end, desc = "Dap Run to Cursor" },
+      { "<f7>",function() require("dapui").eval(vim.fn.expandcmd("<cexpr>.shape")) end, desc = "Dap Hover Shape"},
+      { "<c-k>",mode = {"n","x"}, function() require("dapui").eval() end, desc= "Dap Hover Variable"},
+    },
+    dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio"},
     config = function (_,opts)
       local dap, dapui = require("dap"), require("dapui")
-      dapui.setup()
-
-      dap.listeners.before.attach.dapui_config = function() dapui.open() end
-      dap.listeners.before.launch.dapui_config = function() dapui.open() end
+      dapui.setup(opts)
+      -- dap.listeners.before.attach.dapui_config = function() dapui.open() end
+      dap.listeners.after.event_initialized["dapui_config"] = function() dapui.open({}) end
+      -- dap.listeners.before.launch.dapui_config = function() dapui.open() end
       dap.listeners.before.event_terminated.dapui_config = function() dapui.close() end
       dap.listeners.before.event_exited.dapui_config = function() dapui.close() end
+      vim.api.nvim_create_user_command( "DapUiFloatBreakpoints",'lua require("dapui").float_element("breakpoints",{enter=true})',{})
+      vim.api.nvim_create_user_command( "DapUiFloatRepl",'lua require("dapui").float_element("repl")',{})
+      vim.api.nvim_create_user_command( "DapUiFloatConsole",'lua require("dapui").float_element("console")',{})
+      vim.api.nvim_create_user_command( "DapUiFloatStacks",'lua require("dapui").float_element("stacks",{enter=true})',{})
+      vim.api.nvim_create_user_command( "DapUiFloatWatches",'lua require("dapui").float_element("watches")',{})
+      vim.api.nvim_create_user_command( "DapUiFloatScope",'lua require("dapui").float_element("scopes")',{})
+      vim.api.nvim_create_user_command( "DapUiFloat",'lua require("dapui").float_element()',{})
+      vim.api.nvim_create_user_command( "DapUiToggle",'lua require("dapui").toggle()',{})
+      vim.api.nvim_create_user_command( "DapUiClose",'lua require("dapui").close()',{})
     end
   },
   {
@@ -105,14 +187,15 @@ return{
       virt_text_win_col = nil                -- position the virtual text at a fixed window column (starting from the first text column) ,
     },
   },
+
   --TODO:
   --檢查有效性, 其他lib是否仍保留
-  {
-     "folke/lazydev.nvim",
-    opts = {
-      library = { plugins = { "nvim-dap-ui" }, types = true },
-    }
-  },
+  -- {
+  --    "folke/lazydev.nvim",
+  --   opts = {
+  --     library = { plugins = { "nvim-dap-ui" }, types = true },
+  --   }
+  -- },
   {
     "Weissle/persistent-breakpoints.nvim",
     opts = {
@@ -120,10 +203,11 @@ return{
       -- save_dir = vim.fn.stdpath('data') .. '/nvim_checkpoints',
     },
     config = function(_,opts)
-      vim.keymap.set("n", "<f4>", "<cmd>lua require('persistent-breakpoints.api').toggle_breakpoint()<cr>")
+      -- opts = {silent=true,noremap=true}
+      vim.keymap.set("n", "<f4>", "<cmd>lua require('persistent-breakpoints.api').toggle_breakpoint()<cr>", {desc="Dap Breakpoint Persistent"})
       -- keymap("n", "<YourKey2>", "<cmd>lua require('persistent-breakpoints.api').set_conditional_breakpoint()<cr>", opts)
       -- keymap("n", "<YourKey3>", "<cmd>lua require('persistent-breakpoints.api').clear_all_breakpoints()<cr>", opts)
-      require 'persistent-breakpoints'.setup( opts)
+      require 'persistent-breakpoints'.setup(opts)
     end
   }
 }
