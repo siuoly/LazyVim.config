@@ -54,6 +54,8 @@ return {
       { "<leader>p", "<Cmd>Telescope projects<CR>", desc = "Projects" },
       { "<leader><space>", "<cmd>Telescope smart_open<cr>", { noremap = true, silent = true } },
       { "<leader>fp", enabled = false },
+      { "<leader>sc", "<cmd>Telescope commands<cr>", desc = "Commands" },
+      { "<leader>sC", "<cmd>Telescope command_history<cr>", desc = "Command History" },
     },
     opts = function(_, opts)
       local actions = require("telescope.actions")
