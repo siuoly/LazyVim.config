@@ -6,12 +6,24 @@ return{
       -- https://vscode.dev.org.tw/docs/python/debugging#_debugging-by-attaching-over-a-network-connection
       -- ... more options, see https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings
       table.insert(require('dap').configurations.python, {
-        type = 'debugpy',
+        type = 'python',
+        request = 'launch',
+        name = 'gcc project',
+        -- program = '${file}',
+        -- program = "",
+        module = "gcc.run",
+        console = "integratedTerminal", -- 分隔 terminal
+        -- args = {"--seed","443"}
+        -- args = { "-m","gcc.run" },
+      })
+      table.insert(require('dap').configurations.python, {
+        type = 'python',
         -- type = 'debugpy',
         request = 'launch',
         -- request = 'attach',
         name = 'SSGC Debug',
         program = 'citation_citeseer.py',
+        -- module = "gcc.run"  # replace program
         -- program = '${file}',
         -- program = "${workspaceFolder}/startup.py",
         -- "console": "externalTerminal"
@@ -79,6 +91,8 @@ return{
       nnoremap <buffer> <f6> :q<cr>
       nnoremap <buffer> <f7> :q<cr>
       ]],
+
+      vim.api.nvim_create_user_command( "DapRestart",'lua require("dap").restart()',{})
     })
 
     local dap_icon = {
@@ -128,7 +142,7 @@ return{
       { "<leader>du", function() require("dapui").toggle({ }) end, desc = "Dap UI" },
       { "<f5>", function() require('dap').continue() end, desc = "Dap continue" },
       { "<f6>", function() require("dap").run_to_cursor() end, desc = "Dap Run to Cursor" },
-      { "<f7>",function() require("dapui").eval(vim.fn.expandcmd("<cexpr>.shape")) end, desc = "Dap Hover Shape"},
+      { "<f7>",function() require("dap").restart() end, desc = "Dap Hover Shape"},
       { "<c-k>",mode = {"n","x"}, function() require("dapui").eval() end, desc= "Dap Hover Variable"},
     },
     dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio"},

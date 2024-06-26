@@ -44,9 +44,12 @@ return {
   {
     "jbyuki/nabla.nvim",
     ft = "markdown",
+    keys = {
+      { "<c-p>", '<Cmd>lua require("nabla").popup()<cr>', ft="markdown",desc="popup window show formula"},
+    },
     config = function()
       -- require("nabla").toggle_virt({ autogen = true, silient = false })
-      vim.keymap.set("n", "<c-p>", require("nabla").popup, { desc = "popup window show formula" })
+      -- vim.keymap.set("n", "<c-p>", require("nabla").popup, { desc = "popup window show formula" })
       vim.api.nvim_create_user_command("NablaToggle", function()
         require("nabla").toggle_virt({ autogen = true, silient = false })
       end, {})
