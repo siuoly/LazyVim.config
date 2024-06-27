@@ -42,3 +42,32 @@ map("n", "<c-.>",
   end, { desc="Ranger terminal"}
 )
 map("t", "<c-.>", "<Cmd>close<cr>",{desc="disable terminal"})
+
+
+-------- tmux shift alt enable
+-- 定义起始功能键和目标键的基础值
+local function map_modifier_function_key(start_f_key,start_modifier_key)
+-- 遍历设置键映射
+  for i = 1, 12 do
+    local from_key = "<f" .. (start_f_key + i - 1) .. ">"
+    local to_key = start_modifier_key .. i .. ">"
+    vim.keymap.set("n", from_key, to_key, {remap=true,silent=true})
+  end
+end
+map_modifier_function_key(13, "<S-F")
+map_modifier_function_key(25, "<C-F")
+map_modifier_function_key(37, "<C-S-F")
+map_modifier_function_key(49, "<M-F")
+
+-- TODO: reddit post
+-- 1. 標題： make modifier + function key (e.g. <c-f1>) usable on kitty terminal with tmux
+-- 2. answer:
+-- 3. general kitty ok, because tmux not support
+-- 4. github link tutoirial:
+--    infocmp, grep c-v control-f1  : grep here is corresond
+-- 5. test
+--  map <f13> <S-f1>
+--  map <S-f1> :echo "shift+f1"<cr>
+-- note: <c-s-f1> f3, f5 is use by kitty, so i cannot user it
+-- 6. I like this setting with dap, f1~f13 is fuuly use by a lot of debug key!!!!!
+-- is use by kitty f1,f2,f5,f6,f7,f8,f9,f10,f11
