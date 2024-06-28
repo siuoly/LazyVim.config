@@ -85,15 +85,16 @@ return{
       -- end,{desc="Dap Scope Sidebar"})
 
     vim.api.nvim_create_autocmd("Filetype", {
-      pattern="dap-float",
+      pattern={"dap-float","dap-repl","dapui_stacks"},
       command=[[
-      nnoremap <buffer> q :q<cr>
-      nnoremap <buffer> <f6> :q<cr>
-      nnoremap <buffer> <f7> :q<cr>
+      nnoremap <buffer> q <cmd>q<cr>
+      nnoremap <buffer> <f6> <cmd>q<cr>
+      nnoremap <buffer> <f7> <cmd>q<cr>
+      inoremap <buffer> <f6> <cmd>q<cr>
+      startinsert
       ]],
-
-      vim.api.nvim_create_user_command( "DapRestart",'lua require("dap").restart()',{})
     })
+    vim.api.nvim_create_user_command( "DapRestart",'lua require("dap").restart()',{})
 
     local dap_icon = {
       Stopped             = { "󰁕 ", "DiagnosticWarn", "DapStoppedLine" },
@@ -121,28 +122,34 @@ return{
           elements = { {
               id = "watches",
               size = 0.3
-            }, {
-              id = "repl",
-              size = 0.4
-            }, {
+            },
+            -- {
+            --   id = "repl",
+            --   size = 0.4
+            -- },
+            {
               id = "console",
-              size = 0.3
+              size = 0.7
             } },
           position = "bottom",
           size = 10
         } },
       floating = {
         border = "single",
+        maxheight = 0.9,
+        maxwidth=0.9,
         mappings = {
-          close = { "q" }
+          close = {"<f6>", "q" }
         }
       },
     },
     keys = {
       { "<leader>du", function() require("dapui").toggle({ }) end, desc = "Dap UI" },
       { "<f5>", function() require('dap').continue() end, desc = "Dap continue" },
-      { "<f6>", function() require("dap").run_to_cursor() end, desc = "Dap Run to Cursor" },
-      { "<f7>",function() require("dap").restart() end, desc = "Dap Hover Shape"},
+      { "<f6>", function() require("dapui").float_element("repl",{width=120,height=40}) end, desc = "Dap continue" },
+      { "<f7>", function() require("dapui").float_element("stacks",{enter=true}) end, desc = "Dap continue" },
+      { "<S-f5>",function() require("dap").restart() end, desc = "Dap Restart"},
+      { "<f9>", function() require("dap").run_to_cursor() end, desc = "Dap Run to Cursor" },
       { "<c-k>",mode = {"n","x"}, function() require("dapui").eval() end, desc= "Dap Hover Variable"},
     },
     dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio"},
@@ -150,7 +157,7 @@ return{
       local dap, dapui = require("dap"), require("dapui")
       dapui.setup(opts)
       -- dap.listeners.before.attach.dapui_config = function() dapui.open() end
-      dap.listeners.after.event_initialized["dapui_config"] = function() dapui.open({}) end
+      -- dap.listeners.after.event_initialized["dapui_config"] = function() dapui.open({}) end
       -- dap.listeners.before.launch.dapui_config = function() dapui.open() end
       dap.listeners.before.event_terminated.dapui_config = function() dapui.close() end
       dap.listeners.before.event_exited.dapui_config = function() dapui.close() end
