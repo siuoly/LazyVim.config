@@ -9,12 +9,11 @@ return{
         type = 'python',
         request = 'launch',
         name = 'gcc project',
-        -- program = '${file}',
-        -- program = "",
-        module = "gcc.run",
+        description = "graph convolutional cnn",
+        module = "gcc.run", -- replace `program` key
         console = "integratedTerminal", -- 分隔 terminal
-        -- args = {"--seed","443"}
-        -- args = { "-m","gcc.run" },
+        cwd = require("lazyvim.util").root.git(),
+        -- justMyCode = false,
       })
       table.insert(require('dap').configurations.python, {
         type = 'python',
@@ -23,7 +22,6 @@ return{
         -- request = 'attach',
         name = 'SSGC Debug',
         program = 'citation_citeseer.py',
-        -- module = "gcc.run"  # replace program
         -- program = '${file}',
         -- program = "${workspaceFolder}/startup.py",
         -- "console": "externalTerminal"
@@ -95,6 +93,10 @@ return{
       ]],
     })
     vim.api.nvim_create_user_command( "DapRestart",'lua require("dap").restart()',{})
+    vim.api.nvim_create_user_command( "DapCurrentLine",function ()
+      require("dap").up()
+      require("dap").down()
+    end,{})
 
     local dap_icon = {
       Stopped             = { "󰁕 ", "DiagnosticWarn", "DapStoppedLine" },
@@ -147,7 +149,7 @@ return{
       { "<leader>du", function() require("dapui").toggle({ }) end, desc = "Dap UI" },
       { "<f5>", function() require('dap').continue() end, desc = "Dap continue" },
       { "<f6>", function() require("dapui").float_element("repl",{width=120,height=40}) end, desc = "Dap continue" },
-      { "<f7>", function() require("dapui").float_element("stacks",{enter=true}) end, desc = "Dap continue" },
+      { "<f7>", function() require("dapui").float_element("stacks",{enter=true}) end, desc = "Dap stacks" },
       { "<S-f5>",function() require("dap").restart() end, desc = "Dap Restart"},
       { "<f9>", function() require("dap").run_to_cursor() end, desc = "Dap Run to Cursor" },
       { "<c-k>",mode = {"n","x"}, function() require("dapui").eval() end, desc= "Dap Hover Variable"},
