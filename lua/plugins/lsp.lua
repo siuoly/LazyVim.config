@@ -69,6 +69,7 @@ return{
     "williamboman/mason.nvim",
     opts = {
       ensure_installed = {
+        "marksman",
         "stylua",
         "shellcheck",
         "shfmt",
