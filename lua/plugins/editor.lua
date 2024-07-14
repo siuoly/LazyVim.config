@@ -1,5 +1,34 @@
 return {
   {
+    "stevearc/overseer.nvim",
+    opts = {
+      templates = { "builtin", "user.python_run" },
+      task_list = {
+        bindings = {
+          ["r"] = "<CMD>OverseerQuickAction restart<CR>",
+          ["<C-h>"] = false,
+          ["<C-j>"] = false,
+          ["<C-k>"] = false,
+          ["<C-l>"] = false,
+        },
+      },
+    }
+  },
+  {
+    "michaelb/sniprun",
+    branch = "master",
+    build = "sh install.sh",
+    -- do 'sh install.sh 1' if you want to force compile locally
+    -- (instead of fetching a binary from the github release). Requires Rust >= 1.65
+
+    config = function()
+      require("sniprun").setup({
+      -- your options
+      })
+      vim.keymap.set('x', '<cr>', '<Plug>SnipRun', {silent = true})
+    end,
+  },
+  {
     "rlue/vim-barbaric",
     event = "InsertEnter",
   },
