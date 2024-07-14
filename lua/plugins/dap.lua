@@ -82,36 +82,42 @@ return{
       --   widgets.sidebar(widgets.scopes).open()
       -- end,{desc="Dap Scope Sidebar"})
 
-    vim.api.nvim_create_autocmd("Filetype", {
-      pattern={"dap-float","dap-repl","dapui_stacks"},
-      command=[[
-      nnoremap <buffer> q <cmd>q<cr>
-      nnoremap <buffer> <f6> <cmd>q<cr>
-      nnoremap <buffer> <f7> <cmd>q<cr>
-      inoremap <buffer> <f6> <cmd>q<cr>
-      startinsert
-      ]],
-    })
-    vim.api.nvim_create_user_command( "DapRestart",'lua require("dap").restart()',{})
-    vim.api.nvim_create_user_command( "DapCurrentLine",function ()
-      require("dap").up()
-      require("dap").down()
-    end,{})
+      vim.api.nvim_create_autocmd("Filetype", {
+        pattern={"dap-float","dap-repl","dapui_stacks"},
+        command=[[
+        nnoremap <buffer> q <cmd>q<cr>
+        nnoremap <buffer> <f6> <cmd>q<cr>
+        nnoremap <buffer> <f7> <cmd>q<cr>
+        inoremap <buffer> <f6> <cmd>q<cr>
+        startinsert
+        ]],
+      })
+      vim.api.nvim_create_user_command( "DapRestart",'lua require("dap").restart()',{})
+      vim.api.nvim_create_user_command( "DapCurrentLine",function ()
+        require("dap").up()
+        require("dap").down()
+      end,{})
 
-    local dap_icon = {
-      Stopped             = { "󰁕 ", "DiagnosticWarn", "DapStoppedLine" },
-      Breakpoint          = {" ","BufferCurrentError"},
-      BreakpointCondition = " ",
-      BreakpointRejected  = { " ", "DiagnosticError" },
-      LogPoint            = ".>",
-    }
-    for name, sign in pairs(dap_icon) do
-      sign = type(sign) == "table" and sign or { sign }
-      vim.fn.sign_define(
-        "Dap" .. name,
-        { text = sign[1], texthl = sign[2] or "DiagnosticInfo", linehl = sign[3], numhl = sign[3] }
-      )
-    end
+      local dap_icon = {
+        Stopped             = { "󰁕 ", "DiagnosticWarn", "DapStoppedLine" },
+        Breakpoint          = {" ","BufferCurrentError"},
+        BreakpointCondition = " ",
+        BreakpointRejected  = { " ", "DiagnosticError" },
+        LogPoint            = ".>",
+      }
+      for name, sign in pairs(dap_icon) do
+        sign = type(sign) == "table" and sign or { sign }
+        vim.fn.sign_define(
+          "Dap" .. name,
+          { text = sign[1], texthl = sign[2] or "DiagnosticInfo", linehl = sign[3], numhl = sign[3] }
+        )
+      end
+      -- setup dap config by VsCode launch.json file
+      local vscode = require("dap.ext.vscode")
+      local json = require("plenary.json")
+      vscode.json_decode = function(str)
+        return vim.json.decode(json.json_strip_comments(str))
+      end
 
     end,
   },
