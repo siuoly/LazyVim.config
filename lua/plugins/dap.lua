@@ -17,6 +17,16 @@ return{
       })
       table.insert(require('dap').configurations.python, {
         type = 'python',
+        request = 'launch',
+        name = 'appnp',
+        description = "appnp",
+        program = "src/main.py", -- replace `program` key
+        console = "integratedTerminal", -- 分隔 terminal
+        cwd = require("lazyvim.util").root.git(),
+        -- justMyCode = false,
+      })
+      table.insert(require('dap').configurations.python, {
+        type = 'python',
         -- type = 'debugpy',
         request = 'launch',
         -- request = 'attach',
@@ -158,10 +168,10 @@ return{
     config = function (_,opts)
       local dap, dapui = require("dap"), require("dapui")
       dapui.setup(opts)
-      -- dap.listeners.before.attach.dapui_config = function() dapui.open() end
+      dap.listeners.before.attach.dapui_config = function() dapui.open() end
       -- dap.listeners.after.event_initialized["dapui_config"] = function() dapui.open({}) end
-      -- dap.listeners.before.launch.dapui_config = function() dapui.open() end
-      dap.listeners.before.event_terminated.dapui_config = function() dapui.close() end
+      dap.listeners.before.launch.dapui_config = function() dapui.open() end
+      -- dap.listeners.before.event_terminated.dapui_config = function() dapui.close() end
       dap.listeners.before.event_exited.dapui_config = function() dapui.close() end
       vim.api.nvim_create_user_command( "DapUiFloatBreakpoints",'lua require("dapui").float_element("breakpoints",{enter=true})',{})
       vim.api.nvim_create_user_command( "DapUiFloatRepl",'lua require("dapui").float_element("repl")',{})
