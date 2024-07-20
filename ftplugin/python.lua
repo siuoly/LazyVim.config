@@ -17,8 +17,8 @@ keymap("n", "<space>n"      , [[<Cmd>SlimeSendCurrentLine<cr>]]                 
 keymap("n", "<space><space>", [[<Plug>SlimeParagraphSend]]                        , { desc="Slime run python paragraph",silent = true, buffer = true })
 keymap("x", "<space><space>", "<Plug>SlimeRegionSend"                             , { desc="Slime run python select region",noremap = true, buffer = true })
 -- keymap("n", "<f4>"        , tmux_ipython_plot, { desc="Slime send ipython plot cmd",remap = true, buffer = true })
-keymap("n", "<s-cr>"        , [[<Plug>SlimeSendCell]]                             , { desc="Slime run python notation region",remap = true, buffer = true })
-keymap("n", "<c-cr>"        , [[o##%<esc>]]                             , { desc="Slime run python notation region",remap = true, buffer = true })
+-- keymap("n", "<s-cr>"        , [[<Plug>SlimeSendCell]]                             , { desc="Slime run python notation region",remap = true, buffer = true })
+-- keymap("n", "<c-cr>"        , [[o##%<esc>]]                             , { desc="Slime run python notation region",remap = true, buffer = true })
 
 
 keymap({"n","x"},"<c-j>", function() require("dapui").eval(vim.fn.expandcmd("<cexpr>.shape")) end, {buffer=true,noremap=true, desc= "Dap Hover Variable"} )
