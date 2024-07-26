@@ -10,11 +10,12 @@ return {
             -- },
             components = {
                 'default',
+                'open_output',
                 -- { 'on_output_quickfix', open = true },
             },
         }
     end,
     condition = {
-        filetype = { 'python', 'bash', 'lua' },
+        filetype = { 'python', 'bash', 'lua', 'sh' },
     },
 }

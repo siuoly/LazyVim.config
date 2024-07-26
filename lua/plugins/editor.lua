@@ -1,6 +1,10 @@
 return {
   {
     "stevearc/overseer.nvim",
+    keys = {
+      { "<F5>",   "<cmd>OverseerRun<cr>",         desc = "Run task" },
+      { "<F6>", "<cmd>OverseerToggle<cr>",      desc = "Task list" },
+    },
     opts = {
       templates = { "builtin", "user.python_run" },
       task_list = {
@@ -99,6 +103,7 @@ return {
       { "<leader><space>", "<cmd>Telescope smart_open<cr>", { noremap = true, silent = true } },
       { "<leader>fp", enabled = false },
       { "<leader>sc", "<cmd>Telescope commands<cr>", desc = "Commands" },
+      { "<c-p>", "<cmd>Telescope commands<cr>", desc = "Commands" },
       { "<leader>sC", "<cmd>Telescope command_history<cr>", desc = "Command History" },
     },
     opts = function(_, opts)

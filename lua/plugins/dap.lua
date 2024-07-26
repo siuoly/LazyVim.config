@@ -65,13 +65,13 @@ return{
     keys = {
       -- { "<f5>", function() require('dap').continue() end, desc = "Dap continue" },
       -- { "<f4>", function() require('dap').toggle_breakpoint() end, desc = "Dap Toggle Breakpoint" },
-      { "<f3>", function() require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end, desc = "Dap Lop point message" },
     },
     config = function()
       -- require("dap-python").setup("python3")
       vim.keymap.set('n', '<F10>', function() require('dap').step_over() end,{desc="Dap Step over"})
       vim.keymap.set('n', '<F11>', function() require('dap').step_into() end,{desc="Dap Step into"})
-      vim.keymap.set('n', '<F12>', function() require('dap').step_out() end,{desc="Dap Step out"})
+      vim.keymap.set('n', '<s-F11>', function() require('dap').step_out() end,{desc="Dap Step out"})
+      vim.keymap.set('n', '<F12>', function() require('dap').repl.toggle({width=50},"belowright vertical split") end,{desc="Dap Repl Toggle"})
       -- vim.keymap.set('n', '<Leader>dr', function() require('dap').repl.toggle() end,{desc="Dap Repl Toggle"})
       -- vim.keymap.set('n', '<Leader>dl', function() require('dap').run_last() end,{desc="Dap Run Last"})
       -- vim.keymap.set({'n', 'v'}, '<f6>', function()
@@ -95,14 +95,18 @@ return{
       vim.api.nvim_create_autocmd("Filetype", {
         pattern={"dap-float","dap-repl","dapui_stacks"},
         command=[[
+        set nonu
         nnoremap <buffer> q <cmd>q<cr>
-        nnoremap <buffer> <f6> <cmd>q<cr>
-        nnoremap <buffer> <f7> <cmd>q<cr>
-        inoremap <buffer> <f6> <cmd>q<cr>
+        nnoremap <buffer> <f12> <cmd>q<cr>
+        inoremap <buffer> <f12> <cmd>q<cr>
         startinsert
+        wincmd p
         ]],
       })
       vim.api.nvim_create_user_command( "DapRestart",'lua require("dap").restart()',{})
+      vim.api.nvim_create_user_command( "DapLogPointMessage",function ()
+        require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: '))
+      end,{})
       vim.api.nvim_create_user_command( "DapCurrentLine",function ()
         require("dap").up()
         require("dap").down()
@@ -110,7 +114,7 @@ return{
 
       local dap_icon = {
         Stopped             = { "󰁕 ", "DiagnosticWarn", "DapStoppedLine" },
-        Breakpoint          = {" ","BufferCurrentError"},
+        Breakpoint          = { " ", "BufferCurrentError"},
         BreakpointCondition = " ",
         BreakpointRejected  = { " ", "DiagnosticError" },
         LogPoint            = ".>",
@@ -163,11 +167,10 @@ return{
     },
     keys = {
       { "<leader>du", function() require("dapui").toggle({ }) end, desc = "Dap UI" },
-      { "<f5>", function() require('dap').continue() end, desc = "Dap continue" },
-      { "<f6>", function() require("dapui").float_element("repl",{width=120,height=40}) end, desc = "Dap continue" },
-      { "<f7>", function() require("dapui").float_element("stacks",{enter=true}) end, desc = "Dap stacks" },
-      { "<S-f5>",function() require("dap").restart() end, desc = "Dap Restart"},
-      { "<f9>", function() require("dap").run_to_cursor() end, desc = "Dap Run to Cursor" },
+      -- { "<f6>", function() require("dapui").float_element("repl",{width=120,height=40}) end, desc = "Dap Repl" },
+      -- { "<f7>", function() require("dapui").float_element("stacks",{enter=true}) end, desc = "Dap stacks" },
+      { "<f9>", function() require('dap').continue() end, desc = "Dap continue" },
+      { "<s-f9>", function() require("dap").run_to_cursor() end, desc = "Dap Run to Cursor" },
       { "<c-k>",mode = {"n","x"}, function() require("dapui").eval() end, desc= "Dap Hover Variable"},
     },
     dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio"},
@@ -178,7 +181,7 @@ return{
       -- dap.listeners.after.event_initialized["dapui_config"] = function() dapui.open({}) end
       dap.listeners.before.launch.dapui_config = function() dapui.open() end
       -- dap.listeners.before.event_terminated.dapui_config = function() dapui.close() end
-      dap.listeners.before.event_exited.dapui_config = function() dapui.close() end
+      -- dap.listeners.before.event_exited.dapui_config = function() dapui.close() end -- 不要自動關閉ui
       vim.api.nvim_create_user_command( "DapUiFloatBreakpoints",'lua require("dapui").float_element("breakpoints",{enter=true})',{})
       vim.api.nvim_create_user_command( "DapUiFloatRepl",'lua require("dapui").float_element("repl")',{})
       vim.api.nvim_create_user_command( "DapUiFloatConsole",'lua require("dapui").float_element("console")',{})
