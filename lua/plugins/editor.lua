@@ -2,8 +2,8 @@ return {
   {
     "stevearc/overseer.nvim",
     keys = {
-      { "<F5>",   "<cmd>OverseerRun<cr>",         desc = "Run task" },
-      { "<F6>", "<cmd>OverseerToggle<cr>",      desc = "Task list" },
+      { "<F5>", "<cmd>OverseerRun<cr>", desc = "Run task" },
+      { "<F6>", "<cmd>OverseerToggle<cr>", desc = "Task list" },
     },
     opts = {
       templates = { "builtin", "user.python_run" },
@@ -16,7 +16,7 @@ return {
           ["<C-l>"] = false,
         },
       },
-    }
+    },
   },
   {
     "michaelb/sniprun",
@@ -25,20 +25,20 @@ return {
     -- do 'sh install.sh 1' if you want to force compile locally
     -- (instead of fetching a binary from the github release). Requires Rust >= 1.65
     keys = {
-      { mode='x', '<cr>', '<Plug>SnipRun', {silent=true} },
-      { '<s-cr>', '<Plug>SnipRun<cr>', {silent=true} },
+      { mode = "x", "<cr>", "<Plug>SnipRun", { silent = true } },
+      { "<s-cr>", "<Plug>SnipRun<cr>", { silent = true } },
     },
     config = function()
       require("sniprun").setup({
-        selected_interpreters = { 'Python3_fifo' },
-        repl_enable = {'Python3_fifo'},
+        selected_interpreters = { "Python3_fifo" },
+        repl_enable = { "Python3_fifo" },
         display = {
           -- "Classic",                    --# display results in the command-line  area
-          "VirtualTextOk",              --# display ok results as virtual text (multiline is shortened)
+          "VirtualTextOk", --# display ok results as virtual text (multiline is shortened)
 
           -- "VirtualText",             --# display results as virtual text
-          "TempFloatingWindow",      --# display results in a floating window
-          "LongTempFloatingWindow",  --# same as above, but only long results. To use with VirtualText[Ok/Err]
+          "TempFloatingWindow", --# display results in a floating window
+          "LongTempFloatingWindow", --# same as above, but only long results. To use with VirtualText[Ok/Err]
           -- "Terminal",                --# display results in a vertical split
           -- "TerminalWithCode",        --# display results and code history in a vertical split
           -- "NvimNotify",              --# display with the nvim-notify plugin
@@ -71,9 +71,10 @@ return {
     },
   },
   {
-    'stevearc/aerial.nvim',
+    "stevearc/aerial.nvim",
     keys = {
-      {"<leader>t","<cmd>AerialOpen<cr>", desc = "Code outline.[T]oc "}
+      { "<leader>t", "<cmd>AerialOpen<cr>", desc = "Code outline.[T]oc " },
+      { "<m-t>", "<cmd>AerialOpen<cr>", desc = "Code outline.[T]oc " },
     },
     opts = {
       on_attach = function(bufnr)
@@ -85,7 +86,7 @@ return {
     -- Optional dependencies
     dependencies = {
       "nvim-treesitter/nvim-treesitter",
-      "nvim-tree/nvim-web-devicons"
+      "nvim-tree/nvim-web-devicons",
     },
   },
   {
@@ -93,10 +94,9 @@ return {
     dependencies = {
       { "danielfalk/smart-open.nvim" },
     },
-      cmd = function()
-          vim.api.nvim_create_user_command('Toc', "Trouble lsp_document_symbols win.position=right"
-          , { nargs = '*' })
-      end,
+    cmd = function()
+      vim.api.nvim_create_user_command("Toc", "Trouble lsp_document_symbols win.position=right", { nargs = "*" })
+    end,
     keys = {
       { "<leader>r", "<Cmd>Telescope live_grep<CR>", desc = "Grep (Root Dir)" },
       { "<leader>p", "<Cmd>Telescope projects<CR>", desc = "Projects" },
@@ -159,7 +159,7 @@ return {
     event = "VeryLazy",
     vscode = true,
     ---@type Flash.Config
-    opts = { highlight = { backdrop = false, matches = false }, },
+    opts = { highlight = { backdrop = false, matches = false } },
     -- stylua: ignore
     keys = {
       { "s", mode = { "n", "x", "o" }, nil },

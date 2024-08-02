@@ -26,6 +26,7 @@ map("i", "jk", "<esc>", {})
 map("i", "kj", "<esc>", {})
 map("n", "gss", dict_search, { desc = "sdcv dictionary search keyword" })
 map("n", "gsS", dict_pronounce, { desc = "Pronounce the word under cursor" })
+map("n", "gS", dict_pronounce, { desc = "Pronounce the word under cursor" })
 
 -- Move Lines
 map("n", "<c-s-j>", "<cmd>m .+1<cr>==", { desc = "Move Down" })
