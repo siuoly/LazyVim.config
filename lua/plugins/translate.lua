@@ -11,6 +11,7 @@ return {
     -- ```
     --
     "JuanZoran/Trans.nvim",
+    enabled =  vim.fn.hostname() == "arch-x260",
     keys = {
     -- 可以换成其他你想映射的键
         { '<c-j>', mode = 'n', '<Cmd>Translate<CR>', desc = '󰊿 Translate' },
