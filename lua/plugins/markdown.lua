@@ -18,10 +18,12 @@ return {
   --     dependencies = { "luarocks.nvim" },
   -- },
   {
-      "iamcco/markdown-preview.nvim",
-      cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-      ft = { "markdown" },
-      build = function() vim.fn["mkdp#util#install"]() end,
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    ft = { "markdown" },
+    build = function()
+      vim.fn["mkdp#util#install"]()
+    end,
   },
   {
     "HakonHarnes/img-clip.nvim",
@@ -31,21 +33,22 @@ return {
       -- or leave it empty to use the default settings
       filetypes = {
         markdown = {
-          relative_to_current_file=true,
-          dir_path="img",
+          relative_to_current_file = true,
+          dir_path = "img",
           show_dir_path_in_prompt = true,
           template = "![image]($FILE_PATH)",
-        }
-      }
+        },
+      },
     },
     -- keys = {      { "<leader>p", "<cmd>PasteImage<cr>", desc = "Paste image from system clipboard" },    },
-    commands = {"PasteImage"},
+    commands = { "PasteImage" },
   },
   {
     "jbyuki/nabla.nvim",
+    enabled = false,
     ft = "markdown",
     keys = {
-      { "<c-p>", '<Cmd>lua require("nabla").popup()<cr>', ft="markdown",desc="popup window show formula"},
+      { "<c-p>", '<Cmd>lua require("nabla").popup()<cr>', ft = "markdown", desc = "popup window show formula" },
     },
     config = function()
       -- require("nabla").toggle_virt({ autogen = true, silient = false })
@@ -57,13 +60,43 @@ return {
   },
   {
     "MeanderingProgrammer/markdown.nvim",
-    enabled = false,
-    -- name = 'render-markdown', -- Only needed if you have another plugin named markdown.nvim
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
-    config = function()
-      require("render-markdown").setup({
-        headings = { "H1 ", "H2 ", "H3 ", "H4 ", "H5 ", "H6 " },
-      })
-    end,
+    enabled = true,
+    opts = {
+      file_types = { "markdown", "norg", "rmd", "org" },
+      code = {
+        sign = false,
+        width = "block",
+        right_pad = 1,
+      },
+    anti_conceal = {
+        -- This enables hiding any added text on the line the cursor is on
+        -- This does have a performance penalty as we must listen to the 'CursorMoved' event
+        enabled = false,
+    },
+      heading = {
+        sign = true,
+        icons = {},
+        -- disable backgrounds
+        backgrounds = { "", "", "", "", "", "", },
+      },
+      link = {
+        enabled = false,
+      },
+      render_modes = {'V',  'v', 'n', 'c','i','no' },
+    win_options = {
+        -- See :h 'conceallevel'
+        conceallevel = {
+            default = vim.api.nvim_get_option_value('conceallevel', {}),
+            rendered = 0,
+        },
+        concealcursor = {
+            -- Used when not being rendered, get user setting
+            default = vim.api.nvim_get_option_value('concealcursor', {}),
+            -- Used when being rendered, disable concealing text in all modes
+            rendered = '',
+        },
+      },
+    },
+    ft = { "markdown", "norg", "rmd", "org" },
   },
 }
