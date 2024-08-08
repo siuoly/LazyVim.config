@@ -1,5 +1,33 @@
 return {
   {
+    "monaqa/dial.nvim",
+    opts = function (_,opts)
+      local augend = require("dial.augend")
+      opts.groups.markdown = {
+        augend.misc.alias.markdown_header,
+        augend.date.alias["%Y-%m-%d"],
+        augend.date.alias["%H:%M"],
+      }
+      return opts
+    end
+  },
+  {
+    "ziontee113/icon-picker.nvim",
+    dependencies = "stevearc/dressing.nvim",
+    -- cmd = {"IconPickerNormal"},
+    keys = {
+      {mode="i", "<F5>", "<cmd>IconPickerInsert<cr>",desc="IconPickerInsert"}
+    },
+    opts = { disable_legacy_commands = true, },
+  },
+  {
+    "hrsh7th/nvim-cmp",
+    dependencies = { "hrsh7th/cmp-emoji" },
+    opts = function(_, opts)
+      table.insert(opts.sources, { name = "emoji" })
+    end,
+  },
+  {
     "stevearc/overseer.nvim",
     keys = {
       { "<F5>", "<cmd>OverseerRun<cr>", desc = "Run task" },
