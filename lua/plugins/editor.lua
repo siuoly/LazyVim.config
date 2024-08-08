@@ -28,6 +28,30 @@ return {
     end,
   },
   {
+    "renerocksai/telekasten.nvim",
+    dependencies = {
+      "nvim-telescope/telescope.nvim",
+      "nvim-telekasten/calendar-vim",
+    },
+    cmd = { "Telekasten" },
+    keys = {
+      { "<leader>mc", "<cmd>Telekasten show_calendar<CR>", ft = "markdown" },
+      { "]]", "<cmd>Telekasten follow_link<CR>", ft = "markdown" },
+      { "<leader>mb", "<cmd>Telekasten show_backlinks<CR>", ft = "markdown" },
+      { "<leader>t", "<cmd>Telekasten toggle_todo<CR>", ft = "markdown" },
+      { mode = "i", "[[", "<cmd>Telekasten insert_link<CR>", ft = "markdown" },
+    },
+    opts = {
+      home = vim.fn.expand("~/Notes/plain/"),
+      dailies = vim.fn.expand("~/Notes/plain/" .. os.date("%Y/%m/")),
+      weeklies = vim.fn.expand("~/Notes/plain/" .. os.date("%Y/%m/")),
+      templates = "/home/siuoly/Notes/plain/templates",
+      -- template_new_note = '/path/to/file',    -- template for new notes
+      -- template_new_daily = '/path/to/file',   -- template for new daily notes
+      -- template_new_weekly = '/path/to/file',  -- template for new weekly notes
+    },
+  },
+  {
     "stevearc/overseer.nvim",
     keys = {
       { "<F5>", "<cmd>OverseerRun<cr>", desc = "Run task" },
@@ -101,9 +125,9 @@ return {
   {
     "stevearc/aerial.nvim",
     keys = {
-      { "<leader>t", "<cmd>AerialOpen<cr>", desc = "Code outline.[T]oc " },
-      { "<m-t>", "<cmd>AerialOpen<cr>", desc = "Code outline.[T]oc " },
+      { "<m-t>", "<cmd>AerialToggle<cr>", desc = "Code outline.[T]oc " },
     },
+    ft = { "markdown"},
     opts = {
       on_attach = function(bufnr)
         -- Jump forwards/backwards with '{' and '}'
