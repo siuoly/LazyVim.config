@@ -1,7 +1,7 @@
 return {
   {
     "monaqa/dial.nvim",
-    opts = function (_,opts)
+    opts = function(_, opts)
       local augend = require("dial.augend")
       opts.groups.markdown = {
         augend.misc.alias.markdown_header,
@@ -9,16 +9,16 @@ return {
         augend.date.alias["%H:%M"],
       }
       return opts
-    end
+    end,
   },
   {
     "ziontee113/icon-picker.nvim",
     dependencies = "stevearc/dressing.nvim",
     -- cmd = {"IconPickerNormal"},
     keys = {
-      {mode="i", "<F5>", "<cmd>IconPickerInsert<cr>",desc="IconPickerInsert"}
+      { mode = "i", "<F5>", "<cmd>IconPickerInsert<cr>", desc = "IconPickerInsert" },
     },
-    opts = { disable_legacy_commands = true, },
+    opts = { disable_legacy_commands = true },
   },
   {
     "hrsh7th/nvim-cmp",
@@ -127,7 +127,7 @@ return {
     keys = {
       { "<m-t>", "<cmd>AerialToggle<cr>", desc = "Code outline.[T]oc " },
     },
-    ft = { "markdown"},
+    ft = { "markdown" },
     opts = {
       on_attach = function(bufnr)
         -- Jump forwards/backwards with '{' and '}'
