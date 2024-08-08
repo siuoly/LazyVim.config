@@ -2,3 +2,4 @@
 require("config.lazy")
 require("custom_translate")
 require "config.diagnostic"
+require "config.custom_fold"
