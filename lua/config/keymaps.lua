@@ -50,3 +50,13 @@ map_modifier_function_key(25, "<C-F")
 map_modifier_function_key(37, "<C-S-F")
 map_modifier_function_key(49, "<M-F")
 
+-------- tmux select window
+map("n", "<leader>1", "<cmd>!tmux select-window -t 1<cr>",{desc="tmux select window 1"})
+map("n", "<leader>2", "<cmd>!tmux select-window -t 2<cr>",{desc="tmux select window 2"})
+map("n", "<leader>3", "<cmd>!tmux select-window -t 3<cr>",{desc="tmux select window 3"})
+map("n", "<leader>4", "<cmd>!tmux select-window -t 4<cr>",{desc="tmux select window 4"})
+map("n", "<leader>5", "<cmd>!tmux select-window -t 5<cr>",{desc="tmux select window 5"})
+map("n", "<leader>6", "<cmd>!tmux select-window -t 6<cr>",{desc="tmux select window 6"})
+map("n", "<leader>7", "<cmd>!tmux select-window -t 7<cr>",{desc="tmux select window 7"})
+map("n", "<leader>8", "<cmd>!tmux select-window -t 8<cr>",{desc="tmux select window 8"})
+map("n", "<leader>9", "<cmd>!tmux select-window -t 9<cr>",{desc="tmux select window 9"})
