@@ -37,6 +37,7 @@ return {
   },
   {
     "b0o/incline.nvim",
+    enabled = false,
     config = function()
       local devicons = require("nvim-web-devicons")
       require("incline").setup({
