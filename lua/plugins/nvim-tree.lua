@@ -1,38 +1,14 @@
 return {
   {
     "nvim-tree/nvim-tree.lua",
-    -- keys = {
-    -- {"<leader>e", "<Cmd>NvimTreeToggle<cr>",desc = "Nvim-tree toggle"}
-    -- },
-    config = function()
-      ----------------- exit directly without leaving nvim-tree buffer
-      vim.api.nvim_create_autocmd("BufEnter", {
-        group = vim.api.nvim_create_augroup("NvimTreeClose", {clear = true}),
-        pattern = "NvimTree_*",
-        callback = function()
-          local layout = vim.api.nvim_call_function("winlayout", {})
-          if layout[1] == "leaf" and vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(layout[2]), "filetype") == "NvimTree" and layout[3] == nil then vim.cmd("confirm quit") end
-        end
-      })
-
-
-
-      local nvim_tree = require("nvim-tree")
-      local api = require("nvim-tree.api")
-
-      local function close_or_go_parent()
-        local node = api.tree.get_node_under_cursor()
-        if node.name == ".." then  -- 行首 root
-          vim.cmd.normal("j")
-          api.tree.change_root_to_parent()
-          vim.cmd.normal("k")
-        elseif node.nodes ~= nil and node.open == true then  -- 资料夹 以开
-          api.node.navigate.parent_close()
-        else
-          api.node.navigate.parent()  -- 档案 or 资料夹未开 
-        end
+    enabled=false,
+    keys = function(_)
+      ----------------- open nvim-tree at current file buffer
+      local function open_nvim_tree_at_current_buffer()
+        local current_buffer_path = vim.fn.expand("%:p:h") -- 獲取當前 buffer 的目錄
+        api.tree.change_root(current_buffer_path) -- 更改 nvim-tree 的根目錄
+        api.tree.open() -- 打開 nvim-tree
       end
-
       ----------------- open nvim-tree toggle or focus on it
       local nvimTreeFocusOrToggle = function()
         local nvimTree = require("nvim-tree.api")
@@ -44,18 +20,43 @@ return {
           nvimTree.tree.focus()
         end
       end
-      vim.keymap.set("n", "<leader>e", nvimTreeFocusOrToggle, { desc = "nvimTree Focus Or Toggle" })
-      vim.keymap.set("n", "<C-n>", nvimTreeFocusOrToggle, { desc = "nvimTree Focus Or Toggle" })
+      return {
+        { "<c-n>", nvimTreeFocusOrToggle, { desc = "nvimTree Focus Or Toggle" } },
+        { "<leader>E", open_nvim_tree_at_current_buffer, { noremap = true, silent = true } },
+      }
+    end,
+    config = function()
+      ----------------- exit directly without leaving nvim-tree buffer
+      vim.api.nvim_create_autocmd("BufEnter", {
+        group = vim.api.nvim_create_augroup("NvimTreeClose", { clear = true }),
+        pattern = "NvimTree_*",
+        callback = function()
+          local layout = vim.api.nvim_call_function("winlayout", {})
+          if
+            layout[1] == "leaf"
+            and vim.api.nvim_get_option_value("filetype", { buf = vim.api.nvim_win_get_buf(layout[2]) }) == "NvimTree"
+            and layout[3] == nil
+          then
+            vim.cmd("confirm quit")
+          end
+        end,
+      })
 
+      local nvim_tree = require("nvim-tree")
+      local api = require("nvim-tree.api")
 
-      ----------------- open nvim-tree at current file buffer
-      local function open_nvim_tree_at_current_buffer()
-        local current_buffer_path = vim.fn.expand('%:p:h') -- 獲取當前 buffer 的目錄
-        api.tree.change_root(current_buffer_path) -- 更改 nvim-tree 的根目錄
-        api.tree.open() -- 打開 nvim-tree
+      local function close_or_go_parent()
+        local node = api.tree.get_node_under_cursor()
+        if node.name == ".." then -- 行首 root
+          vim.cmd.normal("j")
+          api.tree.change_root_to_parent()
+          vim.cmd.normal("k")
+        elseif node.nodes ~= nil and node.open == true then -- 资料夹 以开
+          api.node.navigate.parent_close()
+        else
+          api.node.navigate.parent() -- 档案 or 资料夹未开
+        end
       end
-      -- 設置快捷鍵來調用這個函數
-      vim.keymap.set('n', '<leader>E', open_nvim_tree_at_current_buffer, { noremap = true, silent = true })
 
       nvim_tree.setup({
         on_attach = function(bufnr)
@@ -66,10 +67,10 @@ return {
           vim.keymap.set("n", "?", api.tree.toggle_help, opts("Help"))
           vim.keymap.set("n", "h", close_or_go_parent, opts("GO UP"))
           vim.keymap.set("n", "l", api.node.open.edit, opts("Edit"))
-          vim.keymap.set("n", "<cr>", function ()
+          vim.keymap.set("n", "<cr>", function()
             api.node.open.edit()
             api.tree.close()
-          end , opts("Edit"))
+          end, opts("Edit"))
           vim.keymap.set("n", "o", api.node.open.edit, opts("Edit"))
           vim.keymap.set("n", "H", api.tree.collapse_all, opts("Collapse All"))
           vim.keymap.set("n", ".", function()
@@ -100,7 +101,7 @@ return {
         respect_buf_cwd = true,
         update_focused_file = {
           enable = true,
-          update_root = true
+          update_root = true,
         },
 
         ui = {
