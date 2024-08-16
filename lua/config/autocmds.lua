@@ -5,12 +5,12 @@
 
 -- Disable autoformat for lua files
 vim.api.nvim_create_autocmd({ "FileType" }, {
-  pattern = { "sh", "lua","python" },
+  pattern = { "sh", "lua", "python" },
   callback = function()
     vim.b.autoformat = false
   end,
 })
 vim.api.nvim_create_autocmd({ "FileType" }, {
-  pattern = {"markdown"},
+  pattern = { "markdown" },
   command = "setlocal nospell",
 })
