@@ -39,6 +39,6 @@ local function run_cargo()
   keymap("n","<f7>",toggle_winsize,opts)
 end
 
-keymap("n", "<f5>" , run_rust, {buffer=true})
-keymap("n", ":" , "m'A;<esc>``", {buffer=true})
-keymap("n", "<f6>", run_cargo,{buffer=true})
+-- keymap("n", "<f5>" , run_rust, {buffer=true})
+-- keymap("n", ":" , "m'A;<esc>``", {buffer=true})
+-- keymap("n", "<f6>", run_cargo,{buffer=true})
