@@ -1,5 +1,29 @@
 return {
   {
+    "echasnovski/mini.surround",
+    recommended = true,
+    keys = function(_, keys)
+      -- Populate the keys based on the user's options
+      local opts = LazyVim.opts("mini.surround")
+      local mappings = {
+        { opts.mappings.add, desc = "Add Surrounding", mode = { "n", "v" } },
+        { opts.mappings.delete, desc = "Delete Surrounding" },
+        { opts.mappings.replace, desc = "Replace Surrounding" },
+      }
+      mappings = vim.tbl_filter(function(m)
+        return m[1] and #m[1] > 0
+      end, mappings)
+      return vim.list_extend(mappings, keys)
+    end,
+    opts = {
+      mappings = {
+        add = "ga", -- Add surrounding in Normal and Visual modes
+        delete = "gsd", -- Delete surrounding
+        replace = "gsr", -- Replace surrounding
+      },
+    },
+  },
+  {
     "monaqa/dial.nvim",
     opts = function(_, opts)
       local augend = require("dial.augend")
@@ -36,7 +60,8 @@ return {
     },
     cmd = { "Telekasten" },
     keys = {
-      { "<leader>mc", "<cmd>Telekasten show_calendar<CR>", ft = "markdown" },
+      { "<leader>mc", "<cmd>Telekasten show_calendar<CR>" },
+      { "<leader>md", "<cmd>Telekasten goto_today<CR>" },
       { "]]", "<cmd>Telekasten follow_link<CR>", ft = "markdown" },
       { "<leader>mb", "<cmd>Telekasten show_backlinks<CR>", ft = "markdown" },
       { "<leader>t", "<cmd>Telekasten toggle_todo<CR>", ft = "markdown" },
@@ -58,10 +83,12 @@ return {
   },
   {
     "stevearc/aerial.nvim",
+    enabled = true,
+    event = function () return {} end, -- disable LazyVim plugin setting
     keys = {
       { "<m-t>", "<cmd>AerialToggle<cr>", desc = "Code outline.[T]oc " },
     },
-    -- ft = { "markdown" },
+    ft = { "markdown" },
     opts = {
       on_attach = function(bufnr)
         -- Jump forwards/backwards with '{' and '}'
