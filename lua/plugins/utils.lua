@@ -6,7 +6,7 @@ return{
       { "<F6>", "<cmd>OverseerToggle<cr>", desc = "Task list" },
     },
     opts = {
-      templates = { "builtin", "user.python_run" },
+      templates = { "builtin", "user.rust_run", "user.python_run", "user.rust_exe" },
       task_list = {
         bindings = {
           ["r"] = "<CMD>OverseerQuickAction restart<CR>",
