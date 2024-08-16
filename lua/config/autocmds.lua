@@ -14,3 +14,7 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
   pattern = { "markdown" },
   command = "setlocal nospell",
 })
+vim.api.nvim_create_autocmd({ "FileType" }, {
+  pattern = { "vim" },
+  command = "if &bt=='nofile' | map <buffer> q :q<cr>| end",
+})
