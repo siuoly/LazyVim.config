@@ -62,10 +62,6 @@ return{
   },
   {
     "mfussenegger/nvim-dap",
-    keys = {
-      -- { "<f5>", function() require('dap').continue() end, desc = "Dap continue" },
-      -- { "<f4>", function() require('dap').toggle_breakpoint() end, desc = "Dap Toggle Breakpoint" },
-    },
     config = function()
       -- require("dap-python").setup("python3")
       vim.keymap.set('n', '<F10>', function() require('dap').step_over() end,{desc="Dap Step over"})
@@ -229,21 +225,13 @@ return{
       virt_text_win_col = nil                -- position the virtual text at a fixed window column (starting from the first text column) ,
     },
   },
-
-  --TODO:
-  --檢查有效性, 其他lib是否仍保留
-  -- {
-  --    "folke/lazydev.nvim",
-  --   opts = {
-  --     library = { plugins = { "nvim-dap-ui" }, types = true },
-  --   }
-  -- },
   {
     "Weissle/persistent-breakpoints.nvim",
     opts = {
       load_breakpoints_event = { "BufReadPost" },
       -- save_dir = vim.fn.stdpath('data') .. '/nvim_checkpoints',
     },
+    lazy=false,
     config = function(_,opts)
       -- opts = {silent=true,noremap=true}
       vim.keymap.set("n", "<f4>", "<cmd>lua require('persistent-breakpoints.api').toggle_breakpoint()<cr>", {desc="Dap Breakpoint Persistent"})

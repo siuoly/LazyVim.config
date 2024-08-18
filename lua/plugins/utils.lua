@@ -2,11 +2,11 @@ return{
   {
     "stevearc/overseer.nvim",
     keys = {
-      { "<F5>", "<cmd>OverseerRun<cr>", desc = "Run task" },
-      { "<F6>", "<cmd>OverseerToggle<cr>", desc = "Task list" },
+      { "<F5>", "<cmd>w<cr><cmd>OverseerRun<cr>", desc = "Save and Overseer Run task" },
+      { "<F6>", "<cmd>OverseerToggle<cr>", desc = "Toggle Overseer Task list" },
     },
     opts = {
-      templates = { "builtin", "user.rust_run", "user.python_run", "user.rust_exe" },
+      templates = { "builtin", "user.rust_build", "user.python_run", "user.rust_exe" },
       task_list = {
         bindings = {
           ["r"] = "<CMD>OverseerQuickAction restart<CR>",

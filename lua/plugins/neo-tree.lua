@@ -5,7 +5,7 @@ return {
       {
         "<c-n>",
         function()
-          if vim.o.ft == "neo-tree" then
+          if vim.b.neo_tree_source == "filesystem" then
             require("neo-tree.command").execute({ action = "close" })
           else
             require("neo-tree.command").execute({ focus = true, dir = LazyVim.root() })
@@ -33,6 +33,8 @@ return {
         ["<c-v>"] = "open_vsplit",
         ["s"] = "noop",
         ["S"] = "noop",
+        ["<tab>"] = "next_source",
+        ["<s-tab>"] = "prev_source",
       })
 
       local fc = require("neo-tree.sources.filesystem.commands")
@@ -42,6 +44,7 @@ return {
           ["d"] = "noop",
           ["dd"] = "trash",
           ["/"] = "noop",
+          ["s"] = "fuzzy_finder",
           ["."] = "noop",
           ["<c-]>"] = "set_root",
           ["h"] = {
@@ -73,7 +76,9 @@ return {
           ["<cr>"] = {
             function(state)
               fc.open(state)
-              require("neo-tree.sources.common.commands").close_window(state)
+              if state.tree:get_node().type ~= "directory" then
+                require("neo-tree.sources.common.commands").close_window(state)
+              end
             end,
             desc = "open and close tree",
           },
