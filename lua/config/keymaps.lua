@@ -35,6 +35,7 @@ map("n", "<c-.>", function()
 )
 map("t", "<c-.>", "<Cmd>close<cr>",{desc="disable terminal"})
 
+map("n", "gsa", "ga", { desc = "Add surrounding",remap=true }) -- compatibility for mini-surround
 
 -------- tmux shift alt enable
 local function map_modifier_function_key(start_f_key,start_modifier_key)

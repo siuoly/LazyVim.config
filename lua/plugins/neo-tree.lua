@@ -28,19 +28,36 @@ return {
           require("neo-tree.sources.manager").refresh(state.name)
         end,
       }
+      local fc = require("neo-tree.sources.filesystem.commands")
+      local fi = require("neo-tree.sources.filesystem")
       opts.window.mappings = vim.tbl_extend("force", opts.window.mappings, {
         ["<c-s>"] = "open_split",
         ["<c-v>"] = "open_vsplit",
         ["s"] = "noop",
         ["S"] = "noop",
-        ["<tab>"] = "next_source",
+        ["<tab>"] = {
+          function (state)
+              local node = state.tree:get_node()
+              if node.type == "directory" then
+                if not node:is_expanded() then
+                  fi.toggle_directory(state, node)
+                elseif node:has_children() then
+                  require("neo-tree.ui.renderer").focus_node(state, node:get_child_ids()[1])
+                end
+              else
+                fc.open(state)
+              end
+            require("neo-tree.command").execute({ focus = true})
+            end,
+            desc = "open or toggle directory",
+        },
         ["<s-tab>"] = "prev_source",
       })
 
-      local fc = require("neo-tree.sources.filesystem.commands")
-      local fi = require("neo-tree.sources.filesystem")
       opts.filesystem.window = {
         mappings = {
+          ["<c-k>"] = "prev_git_modified",
+          ["<c-j>"] = "next_git_modified",
           ["d"] = "noop",
           ["dd"] = "trash",
           ["/"] = "noop",
