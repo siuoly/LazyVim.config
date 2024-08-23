@@ -84,18 +84,24 @@ return {
   {
     "stevearc/aerial.nvim",
     enabled = true,
-    event = function () return {} end, -- disable LazyVim plugin setting
+    event = function()
+      return {}
+    end, -- disable LazyVim plugin setting
     keys = {
       { "<m-t>", "<cmd>AerialToggle<cr>", desc = "Code outline.[T]oc " },
     },
     ft = { "markdown" },
-    opts = {
-      on_attach = function(bufnr)
+    opts = function(_, opts)
+      opts.post_jump_cmd = "normal! zt"
+      opts.keymaps = {
+        ["<tab>"] = "actions.scroll",
+      }
+      opts.on_attach = function(bufnr)
         -- Jump forwards/backwards with '{' and '}'
         vim.keymap.set("n", "{", "<cmd>AerialPrev<CR>", { buffer = bufnr })
         vim.keymap.set("n", "}", "<cmd>AerialNext<CR>", { buffer = bufnr })
-      end,
-    },
+      end
+    end,
   },
   {
     "nvim-telescope/telescope.nvim",
