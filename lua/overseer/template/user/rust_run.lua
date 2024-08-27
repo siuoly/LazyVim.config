@@ -1,5 +1,5 @@
 return {
-  name = "Run Rust",
+  name = "run",
   builder = function()
     local cmd = vim.fn.expand("%:p:r")
     return {

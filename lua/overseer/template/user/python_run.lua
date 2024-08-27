@@ -1,5 +1,5 @@
 return {
-    name = 'Run Script',
+    name = 'run',
     builder = function()
         local file = vim.fn.expand('%:p')
         return {

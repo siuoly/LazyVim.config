@@ -1,12 +1,19 @@
 return{
   {
+    "folke/persistence.nvim",
+    event = "BufReadPre",
+    keys = {
+      { "<leader>r", function() require("persistence").load({ last = true }) end, desc = "Restore Last Session" },
+    },
+  },
+  {
     "stevearc/overseer.nvim",
     keys = {
-      { "<F5>", "<cmd>w<cr><cmd>OverseerRun<cr>", desc = "Save and Overseer Run task" },
-      { "<F6>", "<cmd>OverseerToggle<cr>", desc = "Toggle Overseer Task list" },
+      { "<F5>", "<cmd>w<cr><cmd>OverseerRun run<cr>", desc = "Save and Overseer run task" },
+      { "<F6>", "<cmd>w<cr><cmd>OverseerRun build<cr>", desc = "Save and Overseer build task" },
     },
     opts = {
-      templates = { "builtin", "user.rust_build", "user.python_run", "user.rust_exe" },
+      templates = { "builtin", "user.rust_build", "user.python_run", "user.rust_run" },
       task_list = {
         bindings = {
           ["r"] = "<CMD>OverseerQuickAction restart<CR>",

@@ -1,5 +1,5 @@
 return {
-    name = 'Build Rust',
+    name = 'build',
     builder = function()
         local file = vim.fn.expand('%:p')
         return {

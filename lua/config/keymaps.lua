@@ -27,7 +27,7 @@ map("i", "<c-s-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
 map("i", "<c-s-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
 map("v", "<c-s-j>", ":m '>+1<cr>gv=gv", { desc = "Move Down" })
 map("v", "<c-s-k>", ":m '<-2<cr>gv=gv", { desc = "Move Up" })
-map("n", "<leader>qq", "<cmd>qa!<cr>", { desc = "Quick Quit" })
+map("n", "<leader>q", "<cmd>qa!<cr>", { nowait=true, desc = "Quick Quit" })
 
 map("n", "<c-.>", function()
     require("lazyvim.util").terminal("/bin/zsh", { cwd="/home/siuoly/myLib" } )

@@ -12,7 +12,17 @@ return {
           end
         end,
         desc = "Explorer NeoTree (Root Dir)",
-        remap = true,
+      },
+      {
+        "<c-g>",
+        function()
+          if vim.b.neo_tree_source == "git_status" then
+            require("neo-tree.command").execute({ action = "close" })
+          else
+            require("neo-tree.command").execute({ source="git_status",focus = true})
+          end
+        end,
+        desc = "Git  NeoTree",
       },
     },
     opts = function(_, opts)
@@ -52,6 +62,15 @@ return {
             desc = "open or toggle directory",
         },
         ["<s-tab>"] = "prev_source",
+        ["<cr>"] = {
+          function(state)
+            fc.open(state)
+            if state.tree:get_node().type ~= "directory" then
+              require("neo-tree.sources.common.commands").close_window(state)
+            end
+          end,
+          desc = "open and close tree",
+        },
       })
 
       opts.filesystem.window = {
@@ -90,15 +109,7 @@ return {
             end,
             desc = "open or toggle directory",
           },
-          ["<cr>"] = {
-            function(state)
-              fc.open(state)
-              if state.tree:get_node().type ~= "directory" then
-                require("neo-tree.sources.common.commands").close_window(state)
-              end
-            end,
-            desc = "open and close tree",
-          },
+
         },
       }
       opts.enable_diagnostics = false

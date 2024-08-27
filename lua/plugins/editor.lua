@@ -112,7 +112,6 @@ return {
       vim.api.nvim_create_user_command("Toc", "Trouble lsp_document_symbols win.position=right", { nargs = "*" })
     end,
     keys = {
-      { "<leader>r", "<Cmd>Telescope live_grep<CR>", desc = "Grep (Root Dir)" },
       { "<leader>p", "<Cmd>Telescope projects<CR>", desc = "Projects" },
       { "<leader><space>", "<cmd>Telescope smart_open<cr>", { noremap = true, silent = true } },
       { "<leader>fp", enabled = false },
@@ -190,7 +189,7 @@ return {
       { "<M-j>", "<Cmd>NvimTmuxNavigateDown<cr>", desc = "NvimTmuxNavigateDown" },
       { "<M-k>", "<Cmd>NvimTmuxNavigateUp<cr>", desc = "NvimTmuxNavigateUp" },
       { "<M-l>", "<Cmd>NvimTmuxNavigateRight<cr>", desc = "NvimTmuxNavigateRight" },
-      { "<C-\\>", "<Cmd>NvimTmuxNavigateLastActive<cr>", desc = "NvimTmuxNavigateLastActive" },
+      -- { "<C-\\>", "<Cmd>NvimTmuxNavigateLastActive<cr>", desc = "NvimTmuxNavigateLastActive" },
       -- vim.keymap.set("n", "<C-Space>", nvim_tmux_nav.NvimTmuxNavigateNext)
     },
     config = function()
