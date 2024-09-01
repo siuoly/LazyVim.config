@@ -64,7 +64,7 @@ return {
       { "<leader>md", "<cmd>Telekasten goto_today<CR>" },
       { "]]", "<cmd>Telekasten follow_link<CR>", ft = "markdown" },
       { "<leader>mb", "<cmd>Telekasten show_backlinks<CR>", ft = "markdown" },
-      { "<leader>t", "<cmd>Telekasten toggle_todo<CR>", ft = "markdown" },
+      { "<m-t>", "<cmd>Telekasten toggle_todo<CR>", ft = "markdown" },
       { mode = "i", "[[", "<cmd>Telekasten insert_link<CR>", ft = "markdown" },
     },
     opts = {
@@ -88,7 +88,7 @@ return {
       return {}
     end, -- disable LazyVim plugin setting
     keys = {
-      { "<m-t>", "<cmd>AerialToggle<cr>", desc = "Code outline.[T]oc " },
+      { "<c-\\>", "<cmd>AerialToggle<cr>", desc = "Aerial.nvim Toggle" },
     },
     ft = { "markdown" },
     opts = function(_, opts)

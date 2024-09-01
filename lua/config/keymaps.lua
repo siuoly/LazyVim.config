@@ -37,6 +37,9 @@ map("t", "<c-.>", "<Cmd>close<cr>",{desc="disable terminal"})
 
 map("n", "gsa", "ga", { desc = "Add surrounding",remap=true }) -- compatibility for mini-surround
 
+map("n", "<leader>t", ":e ~/Notes/todo.md<cr>", {silent=true, desc = "Open todo.md" })
+map("n", "<leader>e", ":e ~/Notes/eng.md<cr>", {silent=true, desc = "Open eng.md" })
+
 -------- tmux shift alt enable
 local function map_modifier_function_key(start_f_key,start_modifier_key)
 -- 遍历设置键映射
