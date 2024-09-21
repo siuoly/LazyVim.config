@@ -1,4 +1,13 @@
-return{
+return {
+  {
+    "MaximilianLloyd/lazy-reload.nvim",
+    lazy = false,
+    opts = {
+      -- your configuration comes here
+      -- or leave it empty to use the default settings
+      -- refer to the configuration section below
+    },
+  },
   {
     "folke/persistence.nvim",
     event = "BufReadPre",
@@ -9,11 +18,11 @@ return{
   {
     "stevearc/overseer.nvim",
     keys = {
-      { "<F5>", "<cmd>w<cr><cmd>OverseerRun run<cr>", desc = "Save and Overseer run task" },
+      { "<F5>", "<cmd>w<cr><cmd>OverseerRun build_and_run<cr>", desc = "Save and Overseer run task" },
       { "<F6>", "<cmd>w<cr><cmd>OverseerRun build<cr>", desc = "Save and Overseer build task" },
     },
     opts = {
-      templates = { "builtin", "user.rust_build", "user.python_run", "user.rust_run" },
+      templates = { "builtin", "user.rust_build", "user.rust_build_and_run", "user.python_run", "user.rust_run" },
       task_list = {
         bindings = {
           ["r"] = "<CMD>OverseerQuickAction restart<CR>",
@@ -106,5 +115,4 @@ return{
       })
     end,
   },
-
 }
